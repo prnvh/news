@@ -1,0 +1,9 @@
+name: Representation Learning
+slug: representation-learning
+description: How models learn compact state, feature, and embedding spaces for prediction and control.
+keyQuestions: []
+coreConcepts: []
+furtherReading: []
+featuredSlugs:
+  - jepa-latent-prediction
+  - world-models-explained

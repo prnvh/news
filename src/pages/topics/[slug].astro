@@ -1,0 +1,102 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleCard from "../../components/editorial/ArticleCard.astro";
+import { getArticlesByTopic } from "../../lib/topics";
+import { getArticleBySlug } from "../../lib/content";
+import type { NormalizedArticle } from "../../lib/types";
+
+export async function getStaticPaths() {
+  const topics = await getCollection("topics");
+  return topics.map((topic) => ({
+    params: { slug: topic.data.slug },
+    props: { topic },
+  }));
+}
+
+const { topic } = Astro.props;
+const articles = await getArticlesByTopic(topic.data.slug);
+const featured = (
+  await Promise.all(
+    topic.data.featuredSlugs.map((slug) => getArticleBySlug(slug)),
+  )
+).filter((article): article is NormalizedArticle => Boolean(article));
+const featuredSlugs = new Set(featured.map((article) => article.slug));
+const remaining = articles.filter((article) => !featuredSlugs.has(article.slug));
+---
+<BaseLayout title={topic.data.name} description={topic.data.description}>
+  <section class="archive-header">
+    <p class="eyebrow">Topic</p>
+    <h1 class="article-title">{topic.data.name}</h1>
+    <p class="article-subtitle">{topic.data.description}</p>
+  </section>
+
+  {
+    featured.length > 0 && (
+      <section>
+        <h2 class="section-heading">Start here</h2>
+        <div class:list={["article-grid", featured.length > 1 && "article-grid--2"]}>
+          {featured.map((article) => <ArticleCard article={article} />)}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    remaining.length > 0 && (
+      <section>
+        <hr class="home-rule" />
+        <h2 class="section-heading">Latest</h2>
+        <div class="archive-list">
+          {remaining.map((article) => (
+            <article class="archive-row">
+              <p class="card-meta">
+                <span>{article.date.toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}</span>
+              </p>
+              <div>
+                <h3 class="story-title">
+                  <a href={article.url}>{article.title}</a>
+                </h3>
+                <p class="story-dek">{article.subtitle}</p>
+              </div>
+              <p class="card-meta"><span>{article.readingTime}</span></p>
+            </article>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    topic.data.keyQuestions.length > 0 && (
+      <section class="article-body">
+        <hr class="home-rule" />
+        <h2 class="section-heading">Key questions</h2>
+        <ul>
+          {topic.data.keyQuestions.map((question) => <li>{question}</li>)}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    topic.data.coreConcepts.length > 0 && (
+      <section class="article-body">
+        <hr class="home-rule" />
+        <h2 class="section-heading">Core concepts</h2>
+        <dl>
+          {topic.data.coreConcepts.map((concept) => (
+            <>
+              <dt><strong>{concept.term}</strong></dt>
+              <dd>{concept.definition}</dd>
+            </>
+          ))}
+        </dl>
+      </section>
+    )
+  }
+</BaseLayout>

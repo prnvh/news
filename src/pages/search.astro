@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout title="Search" description="Search Frontier Manual.">
+  <h1 class="article-title">Search</h1>
+  <p class="card-meta">Index updates on each production build.</p>
+  <div class="search-ui">
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+    <div id="search"></div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { PagefindUI } from "@pagefind/default-ui";
+
+  if (import.meta.env.DEV) {
+    const el = document.getElementById("search");
+    if (el) {
+      el.innerHTML =
+        "<p>Run <code>npm run build && npm run preview</code> to use search locally.</p>";
+    }
+  } else {
+    new PagefindUI({
+      element: "#search",
+      showImages: false,
+    });
+  }
+</script>

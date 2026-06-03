@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# build
+dist/
+
+# astro
+.astro/
+
+# env
+.env
+.env.*
+
+# os
+.DS_Store
+Thumbs.db
+
+# pagefind dev artifacts (production index lives in dist/)
+public/pagefind/

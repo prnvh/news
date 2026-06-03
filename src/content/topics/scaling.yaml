@@ -1,0 +1,8 @@
+name: Scaling
+slug: scaling
+description: What compute, data, parameters, and inference budgets still buy at the frontier.
+keyQuestions: []
+coreConcepts: []
+furtherReading: []
+featuredSlugs:
+  - beyond-scale-obsession

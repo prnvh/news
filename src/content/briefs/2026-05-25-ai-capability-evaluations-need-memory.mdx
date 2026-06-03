@@ -1,0 +1,31 @@
+---
+title: "AI capability evaluations need memory"
+subtitle: "Why stateful evals are the next frontier."
+date: 2026-05-25
+type: brief
+author: Frontier Manual
+topics: ["evaluation", "agi"]
+tags: ["benchmarks", "stateful evaluation"]
+summary:
+  - "Many frontier tasks require persistent state, not one-shot answers."
+  - "Static benchmarks undermeasure planning, adaptation, and recovery."
+  - "Stateful evaluations will matter more as models become tool-using systems."
+readingTime: "9 min read"
+status: published
+---
+
+## What happened
+
+Evaluation designers are paying more attention to tasks that require memory across steps, episodes, or tool calls. One-shot prompts remain useful, but they miss important failures in systems that need to preserve context.
+
+## Why it matters
+
+Real work is stateful. Agents must remember constraints, revise plans, track intermediate results, and recover from mistakes. Evaluations that reset context too often can overstate practical capability.
+
+## Technical context
+
+Stateful evals test the interaction between model reasoning, memory representation, tool use, and environment feedback. They are harder to standardize, but closer to deployment.
+
+## What to watch next
+
+Look for benchmark suites that report persistence, recovery, and long-horizon reliability separately from raw task success.

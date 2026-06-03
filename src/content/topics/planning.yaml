@@ -1,0 +1,8 @@
+name: Planning
+slug: planning
+description: Model-based reasoning, search, control, and long-horizon action.
+keyQuestions: []
+coreConcepts: []
+furtherReading: []
+featuredSlugs:
+  - world-models-explained

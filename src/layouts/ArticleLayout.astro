@@ -1,0 +1,218 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import ArticleSources from "../components/editorial/ArticleSources.astro";
+import { articleSeo } from "../lib/content";
+import type { NormalizedArticle } from "../lib/types";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  article: NormalizedArticle;
+  relatedArticles: NormalizedArticle[];
+  topicObjects: CollectionEntry<"topics">[];
+  Content: import("astro").MarkdownInstance<unknown>["Content"];
+}
+
+const { article, relatedArticles, topicObjects, Content } = Astro.props;
+const seo = articleSeo(article);
+const date = article.date.toLocaleDateString("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+});
+const typeLabel = article.type.replace("-", " ");
+const showHero = Boolean(article.heroImage && article.heroImagePosition !== "none");
+const paper =
+  article.type === "research-note" && "paper" in article.data
+    ? article.data.paper
+    : undefined;
+const fieldSections =
+  article.type === "field-map" && "mapSections" in article.data
+    ? article.data.mapSections
+    : [];
+const orientation =
+  article.type === "field-map" && "orientation" in article.data
+    ? article.data.orientation
+    : undefined;
+const pullQuote =
+  article.type === "essay" && "pullQuote" in article.data
+    ? article.data.pullQuote
+    : undefined;
+const showRail = relatedArticles.length > 0 || fieldSections.length > 0 || pullQuote;
+---
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  image={seo.image}
+  canonical={seo.canonical}
+>
+  <article data-pagefind-body data-pagefind-meta={`type:${article.type}`}>
+    <span
+      class="visually-hidden"
+      aria-hidden="true"
+      data-pagefind-meta={`topics:${article.topics.join(", ")}`}
+    />
+    <span
+      class="visually-hidden"
+      aria-hidden="true"
+      data-pagefind-meta={`tags:${article.tags.join(", ")}`}
+    />
+
+    <header class="article-header">
+      <div class:list={["article-header-grid", !showHero && "article-header-grid--text"]}>
+        <div>
+          <p class="eyebrow article-kicker">{typeLabel}</p>
+          <h1 class="article-title">{article.title}</h1>
+          <p class="article-subtitle">{article.subtitle}</p>
+          <p class="article-meta">
+            <span>{date}</span>
+            <span>{article.readingTime}</span>
+            <span>By {article.author}</span>
+          </p>
+          {
+            topicObjects.length > 0 && (
+              <p class="topic-list">
+                <span class="topic-label">Topics:</span>
+                {topicObjects.map((topic) => (
+                  <a class="topic-pill" href={`/topics/${topic.data.slug}`}>
+                    {topic.data.name}
+                  </a>
+                ))}
+              </p>
+            )
+          }
+
+          {
+            paper && (
+              <section class="paper-box" aria-label="Paper">
+                <dl>
+                  <div>
+                    <dt>Paper</dt>
+                    <dd>{paper.title}</dd>
+                  </div>
+                  <div>
+                    <dt>Year</dt>
+                    <dd>{paper.year}</dd>
+                  </div>
+                  <div>
+                    <dt>Authors</dt>
+                    <dd>{paper.authors.join(", ")}</dd>
+                  </div>
+                  <div>
+                    <dt>Source</dt>
+                    <dd>
+                      {paper.url ? <a href={paper.url}>{paper.source}</a> : paper.source}
+                    </dd>
+                  </div>
+                </dl>
+              </section>
+            )
+          }
+
+          <section class="summary-box" aria-label="In short">
+            <h2 class="section-heading">In short</h2>
+            <ul>
+              {article.summary.map((item) => <li>{item}</li>)}
+            </ul>
+          </section>
+        </div>
+
+        {
+          showHero && (
+            <figure class="article-hero">
+              <img
+                src={article.heroImage}
+                alt={article.heroImageAlt ?? ""}
+                loading="eager"
+              />
+            </figure>
+          )
+        }
+      </div>
+    </header>
+
+    <div class:list={["article-layout", !showRail && "article-layout--single"]}>
+      <div class="article-body">
+        {
+          orientation && (
+            <section class="orientation-box">
+              <h2 class="section-heading">Orientation</h2>
+              <p>{orientation}</p>
+            </section>
+          )
+        }
+        {
+          fieldSections.length > 0 && (
+            <section class="field-sections" aria-label="Field map sections">
+              {fieldSections.map((section) => (
+                <article class="field-section-row">
+                  <p class="field-section-number">{section.number}</p>
+                  <div>
+                    <h2>{section.title}</h2>
+                    <p>{section.description}</p>
+                  </div>
+                  <p class="card-meta">{section.readingTime}</p>
+                </article>
+              ))}
+            </section>
+          )
+        }
+        <Content />
+        <ArticleSources article={article} />
+      </div>
+
+      {
+        showRail && (
+          <aside class="article-rail">
+            {fieldSections.length > 0 && (
+              <section>
+                <h2 class="section-heading">On this page</h2>
+                <ol class="toc-list">
+                  {fieldSections.map((section) => (
+                    <li>
+                      <span>{section.number}</span>
+                      <a href={`#${section.anchor}`}>{section.title}</a>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
+
+            {pullQuote && (
+              <section class="pull-quote">
+                <p>"{pullQuote.text}"</p>
+                {pullQuote.attribution && <cite>- {pullQuote.attribution}</cite>}
+              </section>
+            )}
+
+            {relatedArticles.length > 0 && (
+              <section>
+                <h2 class="section-heading">
+                  {article.type === "research-note" ? "Related notes" : "Related reading"}
+                </h2>
+                <div class="rail-list">
+                  {relatedArticles.map((related) => (
+                    <article>
+                      <p class="section-label">{related.type.replace("-", " ")}</p>
+                      <h3 class="small-story-title">
+                        <a href={related.url}>{related.title}</a>
+                      </h3>
+                      <p class="card-dek">{related.subtitle}</p>
+                      <p class="story-meta">
+                        <span>{related.date.toLocaleDateString("en-US", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })}</span>
+                        <span>{related.readingTime}</span>
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            )}
+          </aside>
+        )
+      }
+    </div>
+  </article>
+</BaseLayout>

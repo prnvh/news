@@ -1,0 +1,19 @@
+name: World Models
+slug: world-models
+description: A guide to world models, latent prediction, planning, and their role in AGI research.
+keyQuestions:
+  - Can world models scale?
+  - Do they require embodiment?
+  - Are they complementary to LLMs?
+  - What does planning require from a learned model?
+coreConcepts:
+  - term: Latent dynamics
+    definition: Modeling state transitions in a learned representation space.
+  - term: Planning
+    definition: Using a model to evaluate possible future actions before acting.
+furtherReading:
+  - label: DreamerV3
+    url: https://danijar.com/project/dreamerv3/
+    type: paper
+featuredSlugs:
+  - world-models-explained

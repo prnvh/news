@@ -1,0 +1,63 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublishedArticles } from "../../lib/content";
+import { getTopics } from "../../lib/topics";
+
+const topics = await getTopics();
+const articles = await getPublishedArticles();
+const normalized = (value: string) => value.toLowerCase().trim();
+const topicCount = (slug: string, name: string) =>
+  articles.filter((article) =>
+    article.topics.some((topic) => {
+      const value = normalized(topic);
+      return (
+        value === normalized(slug) ||
+        value === normalized(name) ||
+        value.replace(/\s+/g, "-") === normalized(slug)
+      );
+    }),
+  ).length;
+const latestForTopic = (slug: string, name: string) =>
+  articles
+    .filter((article) =>
+      article.topics.some((topic) => {
+        const value = normalized(topic);
+        return (
+          value === normalized(slug) ||
+          value === normalized(name) ||
+          value.replace(/\s+/g, "-") === normalized(slug)
+        );
+      }),
+    )
+    .sort((a, b) => b.date.getTime() - a.date.getTime())[0];
+const sorted = [...topics].sort((a, b) =>
+  a.data.name.localeCompare(b.data.name),
+);
+---
+<BaseLayout title="Topics" description="Browse Frontier Manual by topic.">
+  <section class="archive-header">
+    <p class="eyebrow">Topics</p>
+    <h1 class="article-title">Topics</h1>
+    <p class="article-subtitle">A curated index of research areas covered by the publication.</p>
+  </section>
+  <div class="archive-list">
+    {sorted.map((topic) => {
+      const count = topicCount(topic.data.slug, topic.data.name);
+      const latest = latestForTopic(topic.data.slug, topic.data.name);
+      return (
+        <article class="archive-row">
+          <p class="card-meta"><span>{count} {count === 1 ? "piece" : "pieces"}</span></p>
+          <div>
+            <h2 class="story-title">
+              <a href={`/topics/${topic.data.slug}`}>{topic.data.name}</a>
+            </h2>
+            <p class="story-dek">{topic.data.description}</p>
+          </div>
+          <p class="card-meta">
+            {latest ? <span>{latest.title}</span> : <span>No coverage yet</span>}
+          </p>
+        </article>
+      );
+    })}
+  </div>
+</BaseLayout>

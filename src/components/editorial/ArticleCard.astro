@@ -1,0 +1,28 @@
+---
+import type { NormalizedArticle } from "../../lib/types";
+
+interface Props {
+  article: NormalizedArticle;
+  headingLevel?: "h2" | "h3";
+}
+
+const { article, headingLevel = "h3" } = Astro.props;
+const Tag = headingLevel;
+const date = article.date.toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+const typeLabel = article.type.replace("-", " ");
+---
+<article>
+  <Tag class="card-title">
+    <a href={article.url}>{article.title}</a>
+  </Tag>
+  <p class="card-meta">
+    <span>{typeLabel}</span>
+    <span>{date}</span>
+    <span>{article.readingTime}</span>
+  </p>
+  <p class="card-dek">{article.subtitle}</p>
+</article>

@@ -1,0 +1,26 @@
+---
+import type { NormalizedArticle } from "../../lib/types";
+
+interface Props {
+  article: NormalizedArticle;
+}
+
+const { article } = Astro.props;
+---
+{
+  article.sources.length > 0 && (
+    <section class="article-sources">
+      <h2>Sources</h2>
+      <ul>
+        {article.sources.map((source) => (
+          <li>
+            <a href={source.url} rel="noopener noreferrer">
+              {source.label}
+            </a>
+            {source.note && <> - {source.note}</>}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

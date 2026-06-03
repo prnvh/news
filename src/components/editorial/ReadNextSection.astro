@@ -1,0 +1,22 @@
+---
+import type { NormalizedArticle } from "../../lib/types";
+import ArticleCard from "./ArticleCard.astro";
+
+interface Props {
+  articles: NormalizedArticle[];
+}
+const { articles } = Astro.props;
+---
+{
+  articles.length > 0 && (
+    <section>
+      <hr class="rule" />
+      <p class="section-label">Read next</p>
+      <div class="article-grid">
+        {articles.map((article) => (
+          <ArticleCard article={article} />
+        ))}
+      </div>
+    </section>
+  )
+}

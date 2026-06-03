@@ -1,0 +1,12 @@
+name: AGI
+slug: agi
+description: Research directions, benchmarks, and institutional context around general intelligence.
+keyQuestions:
+  - What would count as evidence of generality?
+  - Which capabilities are still missing?
+coreConcepts:
+  - term: Generality
+    definition: Performance that transfers across tasks without task-specific retraining.
+furtherReading: []
+featuredSlugs:
+  - agi-research-directions
