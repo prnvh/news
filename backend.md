@@ -204,19 +204,9 @@ const briefSchema = baseArticleSchema.extend({
 });
 ```
 
-Expected MDX body headings:
+Brief bodies are free-form MDX. Use headings only when they help the piece.
 
-```mdx
-## What happened
-
-## Why it matters
-
-## Technical context
-
-## What to watch next
-```
-
-Do not require those headings technically, but article templates should be designed around them.
+Suggested structures such as "What happened" or "Why it matters" are optional, not required.
 
 ---
 
@@ -257,19 +247,7 @@ const researchNoteSchema = baseArticleSchema.extend({
 });
 ```
 
-Expected MDX body headings:
-
-```mdx
-## The result
-
-## The core idea
-
-## Why it matters
-
-## Limitations
-
-## My take
-```
+Research note bodies are free-form MDX. Paper metadata can live in frontmatter; the body can use whatever sections fit the result.
 
 ---
 
@@ -296,19 +274,7 @@ const essaySchema = baseArticleSchema.extend({
 });
 ```
 
-Expected MDX body headings:
-
-```mdx
-## The claim
-
-## The context
-
-## The technical core
-
-## The strongest objection
-
-## What comes next
-```
+Essay bodies are free-form MDX. Do not force stock headings like "The claim" or "The context"; use the structure the argument needs.
 
 ---
 
@@ -342,7 +308,7 @@ const fieldMapSchema = baseArticleSchema.extend({
 });
 ```
 
-Expected MDX body headings should correspond to `mapSections`.
+Field map bodies are free-form MDX. If `mapSections` are used, headings should correspond loosely enough that navigation remains useful.
 
 Example:
 
@@ -775,13 +741,9 @@ sources: []
 status: draft
 ---
 
-## What happened
+Write the brief in whatever structure fits the piece.
 
-## Why it matters
-
-## Technical context
-
-## What to watch next
+Short sections are useful, but not required.
 ```
 
 ## Research Note Template
@@ -810,15 +772,9 @@ sources: []
 status: draft
 ---
 
-## The result
+Write the research note in whatever structure fits the result.
 
-## The core idea
-
-## Why it matters
-
-## Limitations
-
-## My take
+Keep the paper metadata above if it is useful; remove it if this is not a paper note.
 ```
 
 ## Essay Template
@@ -840,15 +796,9 @@ sources: []
 status: draft
 ---
 
-## The claim
+Write the essay in whatever structure fits the piece.
 
-## The context
-
-## The technical core
-
-## The strongest objection
-
-## What comes next
+Use headings only when they help the argument.
 ```
 
 ## Field Map Template
