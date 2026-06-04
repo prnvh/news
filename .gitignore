@@ -1,19 +1,22 @@
 # dependencies
-node_modules/
+code/node_modules/
 
 # build
-dist/
+code/dist/
+code/.vercel/
 
 # astro
-.astro/
+code/.astro/
 
 # env
 .env
 .env.*
+code/.env
+code/.env.*
 
 # os
 .DS_Store
 Thumbs.db
 
 # pagefind dev artifacts (production index lives in dist/)
-public/pagefind/
+articles/assets/pagefind/

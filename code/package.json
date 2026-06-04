@@ -1,0 +1,26 @@
+{
+  "name": "frontier-manual",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && pagefind --site dist/client",
+    "preview": "astro preview",
+    "pagefind": "pagefind --site dist/client",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^6.0.2",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/vercel": "^10.0.8",
+    "@pagefind/default-ui": "^1.5.2",
+    "@supabase/supabase-js": "^2.107.0",
+    "astro": "^6.4.4",
+    "pagefind": "^1.5.2",
+    "zod": "^4.4.3"
+  }
+}
