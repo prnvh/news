@@ -10,7 +10,11 @@ export default defineConfig({
   site: publication.url,
   publicDir: "../articles/assets",
   output: "static",
-  adapter: vercel(),
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    },
+  }),
   env: {
     schema: {
       SUPABASE_URL: envField.string({
