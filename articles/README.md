@@ -9,6 +9,7 @@ This folder is the writing desk. The app code lives next door in `../code`.
 3. Name it `YYYY-MM-DD-slug.mdx` or `YYYY-MM-DD-slug.md`.
 4. Fill the frontmatter and set `status: published`.
 5. Put article images in `assets/images/` and reference them as `/images/file-name.png`.
+6. Use simple lowercase image names with hyphens, like `jepa-latent-portal.png`.
 
 Homepage, indexes, topics, RSS, sitemap, and search update automatically.
 

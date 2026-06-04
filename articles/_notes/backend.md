@@ -622,7 +622,7 @@ Images are optional.
 Article frontmatter may include:
 
 ```yaml
-heroImage: /images/architecture-window.jpg
+heroImage: /images/scale-architecture.png
 heroImageAlt: View through a circular concrete window toward the sea.
 heroImagePosition: right
 ```
