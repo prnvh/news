@@ -202,72 +202,60 @@ const publishedSoFar = [lead, ...model.secondary].filter(
         </section>
 
         {model.secondary[0] && (
-          <section class="home-two-secondary">
-            <article>
-              <p class="eyebrow">{typeLabels[model.secondary[0].type]}</p>
-              <h2 class="story-title">
-                <a href={model.secondary[0].url}>{model.secondary[0].title}</a>
-              </h2>
-              <p class="story-dek">{model.secondary[0].subtitle}</p>
-              <p class="story-meta">
-                <span>{formatDate(model.secondary[0].date)}</span>
-                <span>{model.secondary[0].readingTime}</span>
-              </p>
-              {model.secondary[0].topics.length > 0 && (
-                <p class="topic-list">
-                  <span class="topic-label">Topics:</span>
-                  {articleTopics(model.secondary[0]).map((topic) => (
-                    <a class="topic-pill" href={`/topics/${topic.toLowerCase().replaceAll(" ", "-")}`}>{topic}</a>
-                  ))}
+          <section class="home-two-more" aria-label="More from Frontier Manual">
+            <h2 class="section-heading">Also published</h2>
+            <div class="home-two-secondary">
+              <article>
+                <p class="eyebrow">{typeLabels[model.secondary[0].type]}</p>
+                <h2 class="story-title">
+                  <a href={model.secondary[0].url}>{model.secondary[0].title}</a>
+                </h2>
+                <p class="story-dek">{model.secondary[0].subtitle}</p>
+                <p class="story-meta">
+                  <span>{formatDate(model.secondary[0].date)}</span>
+                  <span>{model.secondary[0].readingTime}</span>
                 </p>
-              )}
-              <p class="lead-excerpt">{excerpt(model.secondary[0])}</p>
-              <a class="text-link" href={model.secondary[0].url}>{ctaLabels[model.secondary[0].type]}</a>
-            </article>
-            {"paper" in model.secondary[0].data && model.secondary[0].data.paper ? (
-              <aside class="paper-mini" aria-label="Paper">
-                <dl>
-                  <dt>Paper</dt>
-                  <dd>{model.secondary[0].data.paper.title}</dd>
-                  <dt>Authors</dt>
-                  <dd>{model.secondary[0].data.paper.authors.join(", ")}</dd>
-                  <dt>Year</dt>
-                  <dd>{model.secondary[0].data.paper.year}</dd>
-                  <dt>Source</dt>
-                  <dd>{model.secondary[0].data.paper.source}</dd>
-                </dl>
-              </aside>
-            ) : model.secondary[0].heroImage ? (
-              <a class="story-thumb" href={model.secondary[0].url} aria-label={model.secondary[0].title}>
-                <img src={model.secondary[0].heroImage} alt={model.secondary[0].heroImageAlt ?? ""} loading="lazy" />
-              </a>
-            ) : (
-              <div class="intro-copy">
-                <h2 class="section-heading">On deck</h2>
-                <div class="on-deck">
-                  <article><h3 class="small-story-title">Evaluation</h3><p>Rethinking how we measure intelligence and progress.</p></article>
-                  <article><h3 class="small-story-title">World Models</h3><p>From next-token prediction to interactive simulators.</p></article>
-                  <article><h3 class="small-story-title">Data-efficient AI</h3><p>Learning more from less, and why it is hard.</p></article>
+                {model.secondary[0].topics.length > 0 && (
+                  <p class="topic-list">
+                    <span class="topic-label">Topics:</span>
+                    {articleTopics(model.secondary[0]).map((topic) => (
+                      <a class="topic-pill" href={`/topics/${topic.toLowerCase().replaceAll(" ", "-")}`}>{topic}</a>
+                    ))}
+                  </p>
+                )}
+                <p class="lead-excerpt">{excerpt(model.secondary[0])}</p>
+                <a class="text-link" href={model.secondary[0].url}>{ctaLabels[model.secondary[0].type]}</a>
+              </article>
+              {"paper" in model.secondary[0].data && model.secondary[0].data.paper ? (
+                <aside class="paper-mini" aria-label="Paper">
+                  <dl>
+                    <dt>Paper</dt>
+                    <dd>{model.secondary[0].data.paper.title}</dd>
+                    <dt>Authors</dt>
+                    <dd>{model.secondary[0].data.paper.authors.join(", ")}</dd>
+                    <dt>Year</dt>
+                    <dd>{model.secondary[0].data.paper.year}</dd>
+                    <dt>Source</dt>
+                    <dd>{model.secondary[0].data.paper.source}</dd>
+                  </dl>
+                </aside>
+              ) : model.secondary[0].heroImage ? (
+                <a class="story-thumb" href={model.secondary[0].url} aria-label={model.secondary[0].title}>
+                  <img src={model.secondary[0].heroImage} alt={model.secondary[0].heroImageAlt ?? ""} loading="lazy" />
+                </a>
+              ) : (
+                <div class="intro-copy">
+                  <h2 class="section-heading">On deck</h2>
+                  <div class="on-deck">
+                    <article><h3 class="small-story-title">Evaluation</h3><p>Rethinking how we measure intelligence and progress.</p></article>
+                    <article><h3 class="small-story-title">World Models</h3><p>From next-token prediction to interactive simulators.</p></article>
+                    <article><h3 class="small-story-title">Data-efficient AI</h3><p>Learning more from less, and why it is hard.</p></article>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </section>
         )}
-
-        <section class="intro-grid" aria-label="Publication orientation">
-          <div class="intro-copy">
-            <h2 class="section-heading">Why this publication exists</h2>
-            <p>Frontier Manual explores the technical, conceptual, and organizational work behind frontier AI.</p>
-            <p>We focus on durable ideas, clear thinking, and the systems that turn research into progress.</p>
-            <p>No hype. No vendor spin. Just careful analysis and a frontier perspective.</p>
-          </div>
-          <div class="on-deck">
-            <h2 class="section-heading">On deck</h2>
-            <article><h3 class="small-story-title">Evaluation</h3><p>Rethinking how we measure intelligence and progress.</p></article>
-            <article><h3 class="small-story-title">World Models</h3><p>From next-token prediction to interactive simulators.</p></article>
-            <article><h3 class="small-story-title">Data-efficient AI</h3><p>Learning more from less, and why it is hard.</p></article>
-          </div>
-        </section>
       </section>
     )
   }
