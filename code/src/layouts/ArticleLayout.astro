@@ -37,7 +37,26 @@ const pullQuote =
   article.type === "essay" && "pullQuote" in article.data
     ? article.data.pullQuote
     : undefined;
-const showRail = relatedArticles.length > 0 || fieldSections.length > 0 || pullQuote;
+function slugifyHeading(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/&amp;/g, "and")
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
+}
+
+const headingMatches = String(article.entry.body ?? "").matchAll(/^##\s+(.+)$/gm);
+const articleToc = [...headingMatches].map((match) => {
+  const title = match[1].replace(/[#*_`]/g, "").trim();
+  return {
+    title,
+    anchor: slugifyHeading(title),
+  };
+});
+const showToc = fieldSections.length > 0 || articleToc.length > 2;
+const showRail = relatedArticles.length > 0 || showToc || pullQuote;
 ---
 <BaseLayout
   title={seo.title}
@@ -163,16 +182,23 @@ const showRail = relatedArticles.length > 0 || fieldSections.length > 0 || pullQ
       {
         showRail && (
           <aside class="article-rail">
-            {fieldSections.length > 0 && (
+            {showToc && (
               <section>
                 <h2 class="section-heading">On this page</h2>
                 <ol class="toc-list">
-                  {fieldSections.map((section) => (
-                    <li>
-                      <span>{section.number}</span>
-                      <a href={`#${section.anchor}`}>{section.title}</a>
-                    </li>
-                  ))}
+                  {fieldSections.length > 0
+                    ? fieldSections.map((section) => (
+                        <li>
+                          <span>{section.number}</span>
+                          <a href={`#${section.anchor}`}>{section.title}</a>
+                        </li>
+                      ))
+                    : articleToc.map((item, index) => (
+                        <li>
+                          <span>{String(index + 1).padStart(2, "0")}</span>
+                          <a href={`#${item.anchor}`}>{item.title}</a>
+                        </li>
+                      ))}
                 </ol>
               </section>
             )}
