@@ -2,11 +2,14 @@
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
+import vercel from "@astrojs/vercel";
 import { publication } from "./src/config/publication.ts";
 
 // https://astro.build/config
 export default defineConfig({
   site: publication.url,
+  output: "static",
+  adapter: vercel(),
   integrations: [
     mdx({
       components: {

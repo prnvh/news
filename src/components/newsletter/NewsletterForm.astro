@@ -1,27 +1,110 @@
 ---
 import { publication } from "../../config/publication";
 
+const useSupabase = publication.newsletterProvider === "supabase";
 const action = publication.newsletterActionUrl.trim();
-const useMailto = !action;
+const useMailto = !useSupabase && !action;
 const mailtoHref = `mailto:${publication.email}?subject=${encodeURIComponent("Newsletter subscribe")}`;
+const formId = `newsletter-form-${Math.random().toString(36).slice(2, 9)}`;
 ---
 <form
+  id={formId}
   class="newsletter-form"
   method={useMailto ? "get" : "post"}
-  action={useMailto ? mailtoHref : action}
-  target={useMailto ? undefined : "_blank"}
+  action={useMailto ? mailtoHref : useSupabase ? undefined : action}
+  target={useMailto ? undefined : useSupabase ? undefined : "_blank"}
+  data-newsletter-supabase={useSupabase ? "true" : undefined}
+  novalidate
 >
+  <label class="visually-hidden" for={`${formId}-email`}>Email address</label>
   <input
+    id={`${formId}-email`}
     type="email"
     name="email"
     placeholder="Email address"
     required
-    aria-label="Email address"
+    autocomplete="email"
+    inputmode="email"
+  />
+  <label class="visually-hidden" for={`${formId}-website`}>Leave blank</label>
+  <input
+    id={`${formId}-website`}
+    type="text"
+    name="website"
+    tabindex="-1"
+    autocomplete="off"
+    class="visually-hidden"
+    aria-hidden="true"
   />
   <button type="submit" disabled={import.meta.env.PROD && useMailto}>
     Subscribe
   </button>
 </form>
+<p class="newsletter-status" data-newsletter-status hidden role="status"></p>
+
 {
-  useMailto && import.meta.env.DEV && null
+  useSupabase && (
+    <script define:vars={{ formId }}>
+      const form = document.getElementById(formId);
+      const statusEl = form?.parentElement?.querySelector(
+        "[data-newsletter-status]",
+      );
+
+      function setStatus(message, type) {
+        if (!statusEl) return;
+        statusEl.hidden = !message;
+        statusEl.textContent = message ?? "";
+        statusEl.classList.remove("newsletter-status--ok", "newsletter-status--error");
+        if (type) statusEl.classList.add(`newsletter-status--${type}`);
+      }
+
+      form?.addEventListener("submit", async (event) => {
+        if (form.dataset.newsletterSupabase !== "true") return;
+        event.preventDefault();
+
+        const button = form.querySelector('button[type="submit"]');
+        const emailInput = form.querySelector('input[name="email"]');
+        const honeypot = form.querySelector('input[name="website"]');
+        if (!(emailInput instanceof HTMLInputElement)) return;
+
+        const email = emailInput.value.trim();
+        if (!email) {
+          setStatus("Enter a valid email address.", "error");
+          return;
+        }
+
+        button?.setAttribute("disabled", "true");
+        setStatus("Subscribing…", undefined);
+
+        try {
+          const response = await fetch("/api/newsletter/subscribe", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({
+              email,
+              website: honeypot instanceof HTMLInputElement ? honeypot.value : "",
+              source: "website",
+            }),
+          });
+
+          const payload = await response.json().catch(() => ({}));
+          const message =
+            typeof payload.message === "string"
+              ? payload.message
+              : "Something went wrong. Please try again.";
+
+          if (response.ok && payload.ok) {
+            setStatus(message, "ok");
+            form.reset();
+          } else {
+            setStatus(message, "error");
+          }
+        } catch {
+          setStatus("Network error. Please try again.", "error");
+        } finally {
+          button?.removeAttribute("disabled");
+        }
+      });
+    </script>
+  )
 }

@@ -3,13 +3,15 @@ node_modules/
 
 # build
 dist/
+.vercel/
 
 # astro
 .astro/
 
 # env
 .env
-.env.*
+.env.local
+.env.*.local
 
 # os
 .DS_Store

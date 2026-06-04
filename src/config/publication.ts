@@ -6,8 +6,8 @@ export const publication = {
   author: "Frontier Manual",
   email: "hello@frontiermanual.com",
   defaultOgImage: "/images/og-default.svg",
-  newsletterProvider: "buttondown" as const,
-  newsletterActionUrl: "",
+  newsletterProvider: "supabase" as "supabase" | "buttondown",
+  newsletterActionUrl: "/api/newsletter/subscribe",
   nav: [
     { label: "Briefs", href: "/briefs" },
     { label: "Research Notes", href: "/research-notes" },

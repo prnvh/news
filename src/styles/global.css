@@ -622,6 +622,21 @@ input {
   cursor: not-allowed;
 }
 
+.newsletter-status {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  margin: 0.5rem 0 0;
+  max-width: 28rem;
+}
+
+.newsletter-status--ok {
+  color: var(--ink);
+}
+
+.newsletter-status--error {
+  color: var(--accent);
+}
+
 .published-list {
   width: min(540px, 100%);
 }

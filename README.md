@@ -25,9 +25,13 @@ npm run build
 npm run preview
 ```
 
+## Newsletter (Supabase)
+
+Signups use Supabase + a Vercel serverless API. Full setup: [docs/SUPABASE_NEWSLETTER.md](docs/SUPABASE_NEWSLETTER.md).
+
 ## Deploy on Vercel
 
-Import the repo. Vercel detects Astro; `vercel.json` runs `npm run build` (Astro + Pagefind). Set `SITE` or update `publication.url` in `src/config/publication.ts` for your production domain.
+Import the repo. Vercel detects Astro; `vercel.json` runs `npm run build` (Astro + Pagefind). Add `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in Vercel env vars. Update `publication.url` in `src/config/publication.ts` for your production domain.
 
 ## Content layout
 
