@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import NewsletterForm from "../components/newsletter/NewsletterForm.astro";
 import { publication } from "../config/publication";
 import { getHomepageModel } from "../lib/homepage";
 import type { NormalizedArticle } from "../lib/types";
@@ -78,13 +77,6 @@ const publishedSoFar = [lead, ...model.secondary].filter(
             A slow publication on frontier AI research, technical systems, and the people building them.
           </p>
         </div>
-        <section class="newsletter-block newsletter-block--quiet">
-          <div>
-            <h2>The weekly note.</h2>
-            <p>One thoughtful email when we publish. Long reads, not hot takes.</p>
-          </div>
-          <NewsletterForm />
-        </section>
       </section>
     )
   }
@@ -143,14 +135,6 @@ const publishedSoFar = [lead, ...model.secondary].filter(
               <li>Research culture and the people building it</li>
             </ul>
           </div>
-        </section>
-
-        <section class="newsletter-block">
-          <div>
-            <h2>Get Frontier Manual in your inbox</h2>
-            <p>One thoughtful email when we publish. Long reads, not hot takes.</p>
-          </div>
-          <NewsletterForm />
         </section>
 
         <hr class="home-rule" />
@@ -262,11 +246,6 @@ const publishedSoFar = [lead, ...model.secondary].filter(
                 </div>
               </div>
             )}
-            <aside>
-              <h2 class="section-heading">The weekly note</h2>
-              <p>One thoughtful email on frontier AI research, technical ideas, and the people building it.</p>
-              <NewsletterForm />
-            </aside>
           </section>
         )}
 

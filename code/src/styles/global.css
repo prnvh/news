@@ -470,18 +470,10 @@ input {
   font-size: 16px;
 }
 
-.home-page--one > .newsletter-block {
-  margin-top: 8px;
-  padding: 24px 26px;
-  border-color: var(--border);
-}
-
-.home-page--one > .newsletter-block h2 {
-  max-width: 430px;
-}
-
 .home-page--one .published-list {
-  width: min(570px, 100%);
+  width: 100%;
+  max-width: 860px;
+  padding: 6px 0 4px;
 }
 
 .home-page--one .published-list article {
@@ -490,27 +482,30 @@ input {
 
 .home-page--one .published-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 36px;
-  gap: 18px;
-  align-items: end;
-  padding: 0 0 18px;
+  grid-template-columns: minmax(0, 1fr) 34px;
+  gap: 28px;
+  align-items: center;
+  padding: 4px 0 22px;
 }
 
 .home-page--one .published-row > span:first-child {
   display: grid;
-  gap: 5px;
+  gap: 8px;
 }
 
 .home-page--one .published-row .section-label {
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .home-page--one .published-row .card-dek {
   margin: 0;
+  max-width: 680px;
+  font-size: 18px;
+  line-height: 1.35;
 }
 
 .home-page--one .published-row .story-meta {
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .row-arrow {
@@ -693,7 +688,7 @@ input {
 
 .home-two-secondary {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(240px, 0.7fr) minmax(240px, 0.62fr);
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr);
   gap: 36px;
   align-items: stretch;
   padding: 34px 0;
@@ -1273,10 +1268,6 @@ input {
 
   .home-page--one .story-meta {
     margin-top: 20px;
-  }
-
-  .home-page--one > .newsletter-block {
-    padding: 20px 0;
   }
 
   .secondary-story {
