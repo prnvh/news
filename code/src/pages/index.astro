@@ -37,6 +37,11 @@ function formatDate(date: Date) {
 }
 
 function topicName(topic: string) {
+  const displayNames: Record<string, string> = {
+    ai: "AI",
+  };
+  if (displayNames[topic]) return displayNames[topic];
+
   return topic
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
@@ -117,10 +122,10 @@ const publishedSoFar = [lead, ...model.secondary].filter(
           <div class="intro-copy">
             <h2 class="section-heading">What this publication is</h2>
             <p>
-              Frontier Manual is a publication about the frontier of AI and the systems that shape technical progress.
+              Frontier Manual is a publication for students, builders, and technical readers trying to understand the world computer science is becoming.
             </p>
             <p>
-              We write long-form essays, field maps, and research notes that prioritize clarity, depth, and intellectual honesty over speed.
+              We write essays, field maps, and research notes on AI, software, compute, evaluation, research culture, and the systems behind technical progress.
             </p>
             <p>This is a slow publication on purpose. We'd rather be useful than first.</p>
           </div>

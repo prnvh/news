@@ -1,11 +1,11 @@
 ---
 
-title: "CS in the Age of AI"
-subtitle: "Why computer science still matters—and how students should adapt."
+title: "Entering CS in the Age of AI"
+subtitle: "The field is changing before students even arrive. Here is what still matters, what matters more, and what no longer deserves the same attention."
 date: 2026-06-03
 type: essay
 author: Frontier Manual
-topics: ["computer-science", "ai-tools", "software-engineering", "students", "technical-careers"]
+topics: ["computer-science", "ai", "software", "students", "technical-world"]
 tags: ["ai", "coding", "software", "education", "career-strategy", "engineering"]
 summary:
     - "AI is changing the path into computer science, but it is not eliminating the field."

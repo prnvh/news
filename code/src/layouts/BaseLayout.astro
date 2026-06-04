@@ -31,15 +31,8 @@ const formattedDate = latestDate.toLocaleDateString("en-US", {
   year: "numeric",
 });
 const isoDate = latestDate.toISOString().slice(0, 10);
-const catalogNav = publication.nav.filter((item) =>
-  ["Briefs", "Research Notes", "Essays", "Field Maps", "Topics"].includes(
-    item.label,
-  ),
-);
-const manualNav = [
-  ...publication.nav.filter((item) =>
-    ["Start Here", "About"].includes(item.label),
-  ),
+const footerNav = [
+  ...publication.nav,
   { label: "Subscribe", href: "/subscribe" },
   { label: "RSS", href: "/rss.xml" },
 ];
@@ -52,6 +45,9 @@ const manualNav = [
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -128,27 +124,13 @@ const manualNav = [
             <p class="footer-brand">{publication.name}</p>
             <p>{publication.tagline}</p>
           </div>
-          <div class="footer-catalog">
-            <nav aria-label="Catalog">
-              <p class="footer-group-label">Catalog</p>
-              <div class="footer-link-list">
-                {catalogNav.map((item) => (
-                  <a href={item.href}>{item.label}</a>
-                ))}
-              </div>
-            </nav>
-            <nav aria-label="Manual">
-              <p class="footer-group-label">Manual</p>
-              <div class="footer-link-list">
-                {manualNav.map((item) => (
-                  <a href={item.href}>{item.label}</a>
-                ))}
-              </div>
-            </nav>
-          </div>
+          <nav class="footer-link-list" aria-label="Footer">
+            {footerNav.map((item) => (
+              <a href={item.href}>{item.label}</a>
+            ))}
+          </nav>
           <p class="footer-copy">
-            &copy; {new Date().getFullYear()} {publication.name}<br />
-            All rights reserved.
+            &copy; {new Date().getFullYear()} {publication.name}
           </p>
         </div>
       </footer>

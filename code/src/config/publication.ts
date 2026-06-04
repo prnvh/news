@@ -1,7 +1,6 @@
 export const publication = {
   name: "Frontier Manual",
-  tagline:
-    "A publication on frontier AI, research culture, and the systems behind technical progress.",
+  tagline: "A field guide to computing's new frontiers.",
   url: "https://frontiermanual.com",
   author: "Frontier Manual",
   email: "hello@frontiermanual.com",

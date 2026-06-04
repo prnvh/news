@@ -207,11 +207,8 @@ input {
 
 .footer-lower {
   display: grid;
-  grid-template-columns: minmax(230px, 0.9fr) minmax(300px, 1.1fr) minmax(
-      170px,
-      0.6fr
-    );
-  gap: 36px;
+  grid-template-columns: 1fr;
+  gap: 18px;
   align-items: start;
   padding-top: 28px;
 }
@@ -224,29 +221,27 @@ input {
   font-weight: 600;
 }
 
-.footer-catalog {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px;
-}
-
-.footer-group-label {
-  margin-bottom: 12px !important;
-  color: var(--accent);
-  font-family: var(--font-ui);
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
 .footer-link-list {
-  display: grid;
-  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 0;
+  align-items: center;
+  max-width: 920px;
+  color: var(--text);
+}
+
+.footer-link-list a {
+  display: inline-flex;
+  align-items: center;
+}
+
+.footer-link-list a + a::before {
+  content: ".";
+  margin: 0 10px;
+  color: var(--muted);
 }
 
 .footer-copy {
-  text-align: right;
   color: var(--muted);
 }
 
@@ -1181,14 +1176,6 @@ input {
     padding-left: 0;
     border-top: 1px solid var(--border);
     padding-top: 28px;
-  }
-
-  .footer-copy {
-    text-align: left;
-  }
-
-  .footer-catalog {
-    max-width: 520px;
   }
 
   .paper-box dl {
