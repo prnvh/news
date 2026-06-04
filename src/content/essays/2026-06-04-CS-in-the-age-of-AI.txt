@@ -19,7 +19,7 @@ dek: "AI can now write code, explain errors, generate tests, and build prototype
 pullQuote:
 text: "AI makes general coding cheaper. Your advantage comes from judgment, context, taste, and execution."
 attribution: "Frontier Manual"
-status: draft
+status: published
 
 ---
 
