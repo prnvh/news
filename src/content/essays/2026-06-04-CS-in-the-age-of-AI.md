@@ -17,8 +17,8 @@ heroImageAlt: "distro sphere"
 heroImagePosition: right
 dek: "AI can now write code, explain errors, generate tests, and build prototypes. That makes the field feel unstable for students entering computer science today. But the opportunity has not disappeared. It has moved upward: from writing code to understanding systems, directing tools, verifying outputs, and building things that actually work."
 pullQuote:
-text: "AI makes general coding cheaper. Your advantage comes from judgment, context, taste, and execution."
-attribution: "Frontier Manual"
+  text: "AI makes general coding cheaper. Your advantage comes from judgment, context, taste, and execution."
+  attribution: "Frontier Manual"
 status: published
 
 ---
