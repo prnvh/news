@@ -3,6 +3,7 @@ import "../styles/global.css";
 import { publication } from "../config/publication";
 import { getPublishedArticles } from "../lib/content";
 import NewsletterForm from "../components/newsletter/NewsletterForm.astro";
+import Analytics from "@vercel/analytics/astro";
 
 interface Props {
   title: string;
@@ -69,6 +70,7 @@ const footerNav = [
       title={`${publication.name} RSS`}
       href="/rss.xml"
     />
+    <Analytics />
   </head>
   <body>
     <div class="site-shell">
