@@ -8,10 +8,10 @@ export const publication = {
   newsletterProvider: "supabase" as "supabase" | "buttondown",
   newsletterActionUrl: "/api/newsletter/subscribe",
   nav: [
-    { label: "Briefs", href: "/briefs" },
-    { label: "Research Notes", href: "/research-notes" },
-    { label: "Essays", href: "/essays" },
     { label: "Field Maps", href: "/field-maps" },
+    { label: "Paper Breakdowns", href: "/paper-breakdowns" },
+    { label: "Concept Notes", href: "/concept-notes" },
+    { label: "Field Breakdowns", href: "/field-breakdowns" },
     { label: "Topics", href: "/topics" },
     { label: "Start Here", href: "/start-here" },
     { label: "About", href: "/about" },

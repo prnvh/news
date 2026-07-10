@@ -1,10 +1,13 @@
 ---
 import { getCollection, render } from "astro:content";
-import ArticleLayout from "../../layouts/ArticleLayout.astro";
-import { isVisibleInProduction, normalizeArticle } from "../../lib/content";
-import { getRelatedArticles } from "../../lib/related";
+import FieldMapLayout from "../../layouts/FieldMapLayout.astro";
+import {
+  getBriefs,
+  getResearchNotes,
+  isVisibleInProduction,
+  normalizeArticle,
+} from "../../lib/content";
 import { resolveSlug } from "../../lib/slugs";
-import { getTopicObjectsForArticle } from "../../lib/topics";
 
 export async function getStaticPaths() {
   const entries = await getCollection("fieldMaps");
@@ -19,12 +22,21 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const article = normalizeArticle(entry);
-const relatedArticles = await getRelatedArticles(article);
-const topicObjects = await getTopicObjectsForArticle(article);
+const articleTopics = new Set(article.topics.map((topic) => topic.toLowerCase()));
+const sharesTopic = (candidate: typeof article) =>
+  candidate.topics.some((topic) => articleTopics.has(topic.toLowerCase()));
+const sortNewest = (a: typeof article, b: typeof article) =>
+  b.date.getTime() - a.date.getTime();
+const recentPapers = (await getResearchNotes())
+  .filter(sharesTopic)
+  .sort(sortNewest);
+const relatedConceptNotes = (await getBriefs())
+  .filter(sharesTopic)
+  .sort(sortNewest);
 ---
-<ArticleLayout
+<FieldMapLayout
   article={article}
-  relatedArticles={relatedArticles}
-  topicObjects={topicObjects}
+  recentPapers={recentPapers}
+  relatedConceptNotes={relatedConceptNotes}
   Content={Content}
 />

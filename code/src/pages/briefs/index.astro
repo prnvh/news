@@ -1,21 +1,11 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArchiveList from "../../components/editorial/ArchiveList.astro";
 import { getBriefs } from "../../lib/content";
 
 const articles = (await getBriefs()).sort(
   (a, b) => b.date.getTime() - a.date.getTime(),
 );
-const formatDate = (date: Date) =>
-  date.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-const topicName = (topic: string) =>
-  topic
-    .split("-")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
 ---
 <BaseLayout title="Briefs" description="Timely explainers on frontier AI.">
   <section class="archive-header">
@@ -27,27 +17,7 @@ const topicName = (topic: string) =>
     articles.length === 0 ? (
       <p>No published briefs yet.</p>
     ) : (
-      <div class="archive-list">
-        {articles.map((article) => (
-          <article class="archive-row">
-            <p class="card-meta"><span>{formatDate(article.date)}</span></p>
-            <div>
-              <h2 class="story-title">
-                <a href={article.url}>{article.title}</a>
-              </h2>
-              <p class="story-dek">{article.subtitle}</p>
-              {article.topics.length > 0 && (
-                <p class="topic-list">
-                  {article.topics.map((topic) => (
-                    <a class="topic-pill" href={`/topics/${topic}`}>{topicName(topic)}</a>
-                  ))}
-                </p>
-              )}
-            </div>
-            <p class="card-meta"><span>{article.readingTime}</span></p>
-          </article>
-        ))}
-      </div>
+      <ArchiveList articles={articles} />
     )
   }
 </BaseLayout>

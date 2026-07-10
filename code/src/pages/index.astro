@@ -1,386 +1,100 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { publication } from "../config/publication";
-import { getHomepageModel } from "../lib/homepage";
-import type { NormalizedArticle } from "../lib/types";
 
-const model = await getHomepageModel();
-const showFullFront = model.mode === "three-article" || model.mode === "full";
-
-const typeLabels: Record<NormalizedArticle["type"], string> = {
-  brief: "Brief",
-  "research-note": "Research Note",
-  essay: "Essay",
-  "field-map": "Field Map",
+type JournalRow = {
+  title: string;
+  meta: string;
+  href: string;
 };
 
-const ctaLabels: Record<NormalizedArticle["type"], string> = {
-  brief: "Read the brief",
-  "research-note": "Read the research note",
-  essay: "Read the essay",
-  "field-map": "Read the field map",
+type JournalSection = {
+  label: string;
+  href: string;
+  rows: JournalRow[];
 };
 
-const typeOrder: Record<NormalizedArticle["type"], number> = {
-  essay: 0,
-  "research-note": 1,
-  brief: 2,
-  "field-map": 3,
-};
-
-function formatDate(date: Date) {
-  return date.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
-function topicName(topic: string) {
-  const displayNames: Record<string, string> = {
-    ai: "AI",
-  };
-  if (displayNames[topic]) return displayNames[topic];
-
-  return topic
-    .split("-")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-}
-
-function articleTopics(article: NormalizedArticle) {
-  return article.topics.map(topicName);
-}
-
-function excerpt(article: NormalizedArticle) {
-  return article.dek ?? article.summary[0] ?? article.subtitle;
-}
-
-const lead = model.lead;
-const secondarySorted = [...model.secondary].sort(
-  (a, b) => typeOrder[a.type] - typeOrder[b.type],
-);
-const nonFieldSecondary = secondarySorted
-  .filter((article) => article.type !== "field-map")
-  .slice(0, 2);
-const fieldMapFeature =
-  model.secondary.find((article) => article.type === "field-map") ??
-  model.fieldMaps[0];
-const latestBriefs = model.latestBriefs.slice(0, 4);
-const publishedSoFar = [lead, ...model.secondary].filter(
-  (article): article is NormalizedArticle => Boolean(article),
-);
+const sections: JournalSection[] = [
+  {
+    label: "Field Maps",
+    href: "/field-maps",
+    rows: [
+      { title: "Neuromorphic Robotics", meta: "Updated 2 days ago", href: "/field-maps" },
+      { title: "AI for Science", meta: "Updated 5 days ago", href: "/field-maps" },
+      { title: "Autonomous Labs", meta: "Updated 1 week ago", href: "/field-maps" },
+      { title: "Embodied Intelligence", meta: "Updated 1 week ago", href: "/field-maps" },
+      { title: "Scientific Automation", meta: "Updated 2 weeks ago", href: "/field-maps" },
+    ],
+  },
+  {
+    label: "Paper Breakdowns",
+    href: "/paper-breakdowns",
+    rows: [
+      { title: "Taming Latent Diffusion for High-Resolution Synthesis", meta: "2 days ago", href: "/paper-breakdowns" },
+      { title: "A Survey of Spiking Neural Networks in Robotics", meta: "4 days ago", href: "/paper-breakdowns" },
+      {
+        title: "RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control",
+        meta: "1 week ago",
+        href: "/paper-breakdowns",
+      },
+      { title: "Event-Based Vision: A Survey", meta: "1 week ago", href: "/paper-breakdowns" },
+      {
+        title: "Learning to Plan in High-Dimensional Continuous Spaces",
+        meta: "2 weeks ago",
+        href: "/paper-breakdowns",
+      },
+    ],
+  },
+  {
+    label: "Concept Notes",
+    href: "/concept-notes",
+    rows: [
+      { title: "What is event-based vision?", meta: "3 days ago", href: "/concept-notes" },
+      { title: "What are spiking neural networks?", meta: "1 week ago", href: "/concept-notes" },
+      { title: "Why do neuromorphic chips matter?", meta: "1 week ago", href: "/concept-notes" },
+      { title: "What is closed-loop experimentation?", meta: "2 weeks ago", href: "/concept-notes" },
+      { title: "What is embodied intelligence?", meta: "2 weeks ago", href: "/concept-notes" },
+    ],
+  },
+  {
+    label: "Field Breakdowns",
+    href: "/field-breakdowns",
+    rows: [
+      { title: "Robotic Foundation Models", meta: "Updated 3 days ago", href: "/field-breakdowns" },
+      { title: "Event Cameras and Sparse Vision", meta: "Updated 1 week ago", href: "/field-breakdowns" },
+      { title: "Lab Automation Stacks", meta: "Updated 1 week ago", href: "/field-breakdowns" },
+      { title: "Closed-Loop Experimentation", meta: "Updated 2 weeks ago", href: "/field-breakdowns" },
+      { title: "Embodied Evaluation", meta: "Updated 2 weeks ago", href: "/field-breakdowns" },
+    ],
+  },
+];
 ---
 <BaseLayout title={publication.name} description={publication.tagline}>
-  {
-    model.mode === "empty" && (
-      <section class="home-page">
-        <div class="archive-header">
-          <p class="eyebrow">Launching soon</p>
-          <h1 class="lead-title">{publication.name}</h1>
-          <p class="lead-subtitle">
-            A slow publication on frontier AI research, technical systems, and the people building them.
-          </p>
-        </div>
-      </section>
-    )
-  }
-
-  {
-    lead && model.mode === "one-article" && (
-      <section class="home-page home-page--one">
-        <section class="home-lead home-lead--one">
-          <div>
-            <p class="eyebrow">{typeLabels[lead.type]}</p>
-            <h1 class="lead-title">
-              <a href={lead.url}>{lead.title}</a>
-            </h1>
-            <p class="lead-subtitle">{lead.subtitle}</p>
-            <p class="story-meta">
-              <span>{formatDate(lead.date)}</span>
-              <span>{lead.readingTime}</span>
-              <span>By {lead.author}</span>
-            </p>
-            {lead.topics.length > 0 && (
-              <p class="topic-list">
-                <span class="topic-label">Topics:</span>
-                {articleTopics(lead).map((topic) => (
-                  <a class="topic-pill" href={`/topics/${topic.toLowerCase().replaceAll(" ", "-")}`}>{topic}</a>
-                ))}
-              </p>
-            )}
-          </div>
-          {lead.heroImage && (
-            <a class="home-visual" href={lead.url} aria-label={lead.title}>
-              <img src={lead.heroImage} alt={lead.heroImageAlt ?? ""} loading="eager" />
-            </a>
-          )}
-        </section>
-
-        <hr class="home-rule" />
-        <section class="intro-grid" aria-label="Publication orientation">
-          <div class="intro-copy">
-            <h2 class="section-heading">What this publication is</h2>
-            <p>
-              Frontier Manual is a publication for students, builders, and technical readers trying to understand the world computer science is becoming.
-            </p>
-            <p>
-              We write essays, field maps, and research notes on AI, software, compute, evaluation, research culture, and the systems behind technical progress.
-            </p>
-            <p>This is a slow publication on purpose. We'd rather be useful than first.</p>
-          </div>
-          <div>
-            <h2 class="section-heading">What to expect</h2>
-            <ul class="arrow-list">
-              <li>AGI research landscapes and architectures</li>
-              <li>World models and representation learning</li>
-              <li>Evaluation, benchmarks, and measurement</li>
-              <li>Compute, infrastructure, and scaling laws</li>
-              <li>Alignment, safety, and governance</li>
-              <li>Research culture and the people building it</li>
-            </ul>
-          </div>
-        </section>
-
-        <hr class="home-rule" />
-        <section class="published-list">
-          <h2 class="section-heading">Published so far</h2>
-          {publishedSoFar.map((article) => (
-            <article>
-              <a class="published-row" href={article.url}>
-                <span>
-                  <span class="section-label">{typeLabels[article.type]}</span>
-                  <span class="small-story-title">{article.title}</span>
-                  <span class="card-dek">{article.subtitle}</span>
-                  <span class="story-meta">
-                    <span>{formatDate(article.date)}</span>
-                    <span>{article.readingTime}</span>
-                  </span>
-                </span>
-                <span class="row-arrow" aria-hidden="true">-&gt;</span>
-              </a>
-            </article>
-          ))}
-          <a class="text-link" href={`/${lead.collection.replace("researchNotes", "research-notes").replace("fieldMaps", "field-maps")}`}>
-            View all {typeLabels[lead.type].toLowerCase()}s
+  <div class="home-page" aria-label="Journal sections">
+    {sections.map((section) => (
+      <section class="journal-section" aria-labelledby={`${section.href.slice(1)}-heading`}>
+        <div class="journal-section-head">
+          <h2 id={`${section.href.slice(1)}-heading`} class="section-label">
+            {section.label}
+          </h2>
+          <a class="section-view-all" href={section.href}>
+            View all <span aria-hidden="true">&rarr;</span>
           </a>
-        </section>
-      </section>
-    )
-  }
-
-  {
-    lead && model.mode === "two-article" && (
-      <section class="home-page">
-        <section class="home-lead home-lead--two">
-          <div>
-            <p class="eyebrow">{typeLabels[lead.type]}</p>
-            <h1 class="lead-title">
-              <a href={lead.url}>{lead.title}</a>
-            </h1>
-            <p class="lead-subtitle">{lead.subtitle}</p>
-            <p class="story-meta">
-              <span>{formatDate(lead.date)}</span>
-              <span>{lead.readingTime}</span>
-            </p>
-            {lead.topics.length > 0 && (
-              <p class="topic-list">
-                <span class="topic-label">Topics:</span>
-                {articleTopics(lead).map((topic) => (
-                  <a class="topic-pill" href={`/topics/${topic.toLowerCase().replaceAll(" ", "-")}`}>{topic}</a>
-                ))}
-              </p>
-            )}
-            <p class="lead-excerpt">{excerpt(lead)}</p>
-            <a class="text-link" href={lead.url}>{ctaLabels[lead.type]}</a>
-          </div>
-          {lead.heroImage && (
-            <a class="home-visual" href={lead.url} aria-label={lead.title}>
-              <img src={lead.heroImage} alt={lead.heroImageAlt ?? ""} loading="eager" />
-            </a>
-          )}
-        </section>
-
-        {model.secondary[0] && (
-          <section class="home-two-more" aria-label="More from Frontier Manual">
-            <h2 class="section-heading">Also published</h2>
-            <div class="home-two-secondary">
-              <article>
-                <p class="eyebrow">{typeLabels[model.secondary[0].type]}</p>
-                <h2 class="story-title">
-                  <a href={model.secondary[0].url}>{model.secondary[0].title}</a>
-                </h2>
-                <p class="story-dek">{model.secondary[0].subtitle}</p>
-                <p class="story-meta">
-                  <span>{formatDate(model.secondary[0].date)}</span>
-                  <span>{model.secondary[0].readingTime}</span>
-                </p>
-                {model.secondary[0].topics.length > 0 && (
-                  <p class="topic-list">
-                    <span class="topic-label">Topics:</span>
-                    {articleTopics(model.secondary[0]).map((topic) => (
-                      <a class="topic-pill" href={`/topics/${topic.toLowerCase().replaceAll(" ", "-")}`}>{topic}</a>
-                    ))}
-                  </p>
-                )}
-                <p class="lead-excerpt">{excerpt(model.secondary[0])}</p>
-                <a class="text-link" href={model.secondary[0].url}>{ctaLabels[model.secondary[0].type]}</a>
-              </article>
-              {"paper" in model.secondary[0].data && model.secondary[0].data.paper ? (
-                <aside class="paper-mini" aria-label="Paper">
-                  <dl>
-                    <dt>Paper</dt>
-                    <dd>{model.secondary[0].data.paper.title}</dd>
-                    <dt>Authors</dt>
-                    <dd>{model.secondary[0].data.paper.authors.join(", ")}</dd>
-                    <dt>Year</dt>
-                    <dd>{model.secondary[0].data.paper.year}</dd>
-                    <dt>Source</dt>
-                    <dd>{model.secondary[0].data.paper.source}</dd>
-                  </dl>
-                </aside>
-              ) : model.secondary[0].heroImage ? (
-                <a class="story-thumb" href={model.secondary[0].url} aria-label={model.secondary[0].title}>
-                  <img src={model.secondary[0].heroImage} alt={model.secondary[0].heroImageAlt ?? ""} loading="lazy" />
-                </a>
-              ) : (
-                <div class="intro-copy">
-                  <h2 class="section-heading">On deck</h2>
-                  <div class="on-deck">
-                    <article><h3 class="small-story-title">Evaluation</h3><p>Rethinking how we measure intelligence and progress.</p></article>
-                    <article><h3 class="small-story-title">World Models</h3><p>From next-token prediction to interactive simulators.</p></article>
-                    <article><h3 class="small-story-title">Data-efficient AI</h3><p>Learning more from less, and why it is hard.</p></article>
-                  </div>
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-      </section>
-    )
-  }
-
-  {
-    lead && showFullFront && (
-      <section class="home-page">
-        <section class:list={["home-full-lead", latestBriefs.length === 0 && "home-full-lead--no-rail"]}>
-          <div>
-            <p class="eyebrow">{typeLabels[lead.type]}</p>
-            <h1 class="lead-title">
-              <a href={lead.url}>{lead.title}</a>
-            </h1>
-            <p class="lead-subtitle">{lead.subtitle}</p>
-            <p class="story-meta">
-              <span>{formatDate(lead.date)}</span>
-              <span>{lead.readingTime}</span>
-            </p>
-            {lead.topics.length > 0 && (
-              <p class="topic-list">
-                {articleTopics(lead).map((topic) => (
-                  <a class="topic-pill" href={`/topics/${topic.toLowerCase().replaceAll(" ", "-")}`}>{topic}</a>
-                ))}
-              </p>
-            )}
-          </div>
-          {lead.heroImage && (
-            <a class="home-visual" href={lead.url} aria-label={lead.title}>
-              <img src={lead.heroImage} alt={lead.heroImageAlt ?? ""} loading="eager" />
-            </a>
-          )}
-          {latestBriefs.length > 0 && (
-            <aside class="brief-list">
-              <h2 class="section-heading">Latest briefs</h2>
-              {latestBriefs.map((article) => (
-                <article>
-                  <p class="card-meta"><span>{formatDate(article.date).replace(", 2026", "")}</span></p>
-                  <h3 class="small-story-title">
-                    <a href={article.url}>{article.title}</a>
-                  </h3>
-                  <p class="card-dek">{article.subtitle}</p>
-                </article>
-              ))}
-              <a class="text-link" href="/briefs">View all briefs</a>
-            </aside>
-          )}
-        </section>
-
-        {nonFieldSecondary.length > 0 && (
-          <section class="home-secondary-grid">
-            {nonFieldSecondary.map((article) => (
-              <article class="secondary-story">
-                <div>
-                  <p class="section-label">{typeLabels[article.type]}</p>
-                  <h2 class="story-title">
-                    <a href={article.url}>{article.title}</a>
-                  </h2>
-                  <p class="story-dek">{article.subtitle}</p>
-                  <p class="story-meta">
-                    <span>{formatDate(article.date)}</span>
-                    <span>{article.readingTime}</span>
-                  </p>
-                  {article.topics.length > 0 && (
-                    <p class="topic-list">
-                      {articleTopics(article).slice(0, 3).map((topic) => (
-                        <a class="topic-pill" href={`/topics/${topic.toLowerCase().replaceAll(" ", "-")}`}>{topic}</a>
-                      ))}
-                    </p>
-                  )}
-                </div>
-                {article.heroImage && (
-                  <a class="story-thumb" href={article.url} aria-label={article.title}>
-                    <img src={article.heroImage} alt={article.heroImageAlt ?? ""} loading="lazy" />
-                  </a>
-                )}
-              </article>
-            ))}
-          </section>
-        )}
-
-        {fieldMapFeature && (
-          <section class="field-strip">
-            <article>
-              <p class="section-label">{typeLabels[fieldMapFeature.type]}</p>
-              <h2 class="story-title">
-                <a href={fieldMapFeature.url}>{fieldMapFeature.title}</a>
-              </h2>
-              <p class="story-dek">{fieldMapFeature.subtitle}</p>
-              <p class="story-meta">
-                <span>{formatDate(fieldMapFeature.date)}</span>
-                <span>{fieldMapFeature.readingTime}</span>
-              </p>
-              {fieldMapFeature.topics.length > 0 && (
-                <p class="topic-list">
-                  {articleTopics(fieldMapFeature).slice(0, 4).map((topic) => (
-                    <a class="topic-pill" href={`/topics/${topic.toLowerCase().replaceAll(" ", "-")}`}>{topic}</a>
-                  ))}
-                </p>
-              )}
-            </article>
-            {fieldMapFeature.heroImage && (
-              <a class="home-visual" href={fieldMapFeature.url} aria-label={fieldMapFeature.title}>
-                <img src={fieldMapFeature.heroImage} alt={fieldMapFeature.heroImageAlt ?? ""} loading="lazy" />
+        </div>
+        <ol class="journal-list">
+          {section.rows.map((row) => (
+            <li>
+              <a class="journal-list-link" href={row.href}>
+                <span class="journal-list-copy">
+                  <span class="journal-list-title">{row.title}</span>
+                  <span class="journal-list-meta">{row.meta}</span>
+                </span>
+                <span class="journal-list-arrow" aria-hidden="true">&rarr;</span>
               </a>
-            )}
-            {model.researchNotes.length > 0 && (
-              <aside class="column-list">
-                <h2 class="section-heading">Research notes</h2>
-                {model.researchNotes.slice(0, 3).map((article) => (
-                  <article>
-                    <h3 class="small-story-title">
-                      <a href={article.url}>{article.title}</a>
-                    </h3>
-                    <p class="story-meta">
-                      <span>{formatDate(article.date)}</span>
-                      <span>{article.readingTime}</span>
-                    </p>
-                  </article>
-                ))}
-                <a class="text-link" href="/research-notes">View all research notes</a>
-              </aside>
-            )}
-          </section>
-        )}
+            </li>
+          ))}
+        </ol>
       </section>
-    )
-  }
+    ))}
+  </div>
 </BaseLayout>

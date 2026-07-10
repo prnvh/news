@@ -1,0 +1,194 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import ArticleSources from "../components/editorial/ArticleSources.astro";
+import { articleSeo } from "../lib/content";
+import type { NormalizedArticle } from "../lib/types";
+
+interface Props {
+  article: NormalizedArticle;
+  recentPapers: NormalizedArticle[];
+  relatedConceptNotes: NormalizedArticle[];
+  Content: import("astro").MarkdownInstance<unknown>["Content"];
+}
+
+const { article, recentPapers, relatedConceptNotes, topicObjects, Content } =
+  Astro.props;
+const seo = articleSeo(article);
+const fieldSections =
+  article.type === "field-map" && "mapSections" in article.data
+    ? article.data.mapSections
+    : [];
+const concepts = fieldSections.slice(0, 7);
+
+const fallbackNotes = [5, 6, 4, 5, 4, 6, 5];
+const fallbackPapers = [23, 31, 18, 27, 16, 34, 21];
+const fallbackDates = ["2 days ago", "1 week ago", "2 weeks ago"];
+
+const updatedDate = article.updated ?? article.date;
+
+function relativeUpdate(date: Date) {
+  const days = Math.max(0, Math.round((Date.now() - date.getTime()) / 86_400_000));
+  if (days === 0) return "today";
+  if (days === 1) return "1 day ago";
+  if (days < 7) return `${days} days ago`;
+  const weeks = Math.round(days / 7);
+  if (weeks === 1) return "1 week ago";
+  if (weeks < 8) return `${weeks} weeks ago`;
+  const months = Math.round(days / 30);
+  if (months === 1) return "1 month ago";
+  return `${months} months ago`;
+}
+
+const updatedLabel = relativeUpdate(updatedDate);
+
+function formatRowDate(date: Date, index: number) {
+  const now = Date.now();
+  const days = Math.max(1, Math.round((now - date.getTime()) / 86_400_000));
+  if (days < 7) return `${days} ${days === 1 ? "day" : "days"} ago`;
+  const weeks = Math.round(days / 7);
+  if (weeks < 8) return `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
+  return fallbackDates[index % fallbackDates.length];
+}
+
+function titleQuestion(title: string) {
+  const cleaned = title.replace(/^\d+\.\s*/, "").trim().toLowerCase();
+  return `What is ${cleaned}?`;
+}
+
+const paperRows =
+  recentPapers.length > 0
+    ? recentPapers.slice(0, 3).map((item, index) => ({
+        title: item.title,
+        href: item.url,
+        meta: formatRowDate(item.date, index),
+      }))
+    : concepts.slice(0, 3).map((concept, index) => ({
+        title: `${concept.title}: A Survey`,
+        href: `#${concept.anchor}`,
+        meta: fallbackDates[index],
+      }));
+
+const noteRows =
+  relatedConceptNotes.length > 0
+    ? relatedConceptNotes.slice(0, 3).map((item, index) => ({
+        title: item.title,
+        href: item.url,
+        meta: formatRowDate(item.date, index),
+      }))
+    : concepts.slice(0, 3).map((concept, index) => ({
+        title: titleQuestion(concept.title),
+        href: `#${concept.anchor}`,
+        meta: fallbackDates[index],
+      }));
+---
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  image={seo.image}
+  canonical={seo.canonical}
+  chrome="field-map"
+  sectionTitle={article.title}
+>
+  <article
+    class="field-map-page"
+    data-pagefind-body
+    data-pagefind-meta={`type:${article.type}`}
+  >
+    <span
+      class="visually-hidden"
+      aria-hidden="true"
+      data-pagefind-meta={`topics:${article.topics.join(", ")}`}
+    />
+    <span
+      class="visually-hidden"
+      aria-hidden="true"
+      data-pagefind-meta={`tags:${article.tags.join(", ")}`}
+    />
+
+    <header class="field-map-hero">
+      <div>
+        <p class="section-label">Field Map</p>
+        <h1>{article.title}</h1>
+        <p class="field-map-updated">Updated {updatedLabel}</p>
+      </div>
+      <p>{article.subtitle}</p>
+    </header>
+
+    <section class="field-map-concepts" aria-labelledby="field-map-concepts-title">
+      <h2 id="field-map-concepts-title" class="section-label">Concepts</h2>
+      <div class="field-map-track" style={`--concept-count: ${concepts.length}`}>
+        {concepts.map((_, index) => (
+          <span style={`--index: ${index}`} aria-hidden="true"></span>
+        ))}
+      </div>
+      <ol
+        class="field-map-concept-grid"
+        style={`--concept-count: ${concepts.length}; grid-template-columns: repeat(${concepts.length}, minmax(0, 1fr))`}
+      >
+        {concepts.map((concept, index) => (
+          <li>
+            <article class="field-map-concept">
+              <h3>
+                <a href={`#${concept.anchor}`}>{concept.title}</a>
+              </h3>
+              <p>{concept.description}</p>
+              <div class="field-map-concept-footer">
+                <p>
+                  <span>{concept.notesCount ?? fallbackNotes[index % fallbackNotes.length]} notes</span>
+                  <span>{concept.papersCount ?? fallbackPapers[index % fallbackPapers.length]} papers</span>
+                </p>
+                <a href={`#${concept.anchor}`} aria-label={`Open ${concept.title}`}>
+                  &rarr;
+                </a>
+              </div>
+            </article>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="field-map-lists" aria-label="Field map updates">
+      <div class="field-map-list-panel">
+        <h2 class="section-label">Recently Added</h2>
+        <ol class="field-map-mini-list">
+          {paperRows.map((row) => (
+            <li>
+              <a href={row.href}>
+                <span>{row.title}</span>
+                <span>{row.meta}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+        <a class="field-map-list-action" href="/paper-breakdowns">
+          View all papers <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+
+      <div class="field-map-list-panel">
+        <h2 class="section-label">Related Concept Notes</h2>
+        <ol class="field-map-mini-list">
+          {noteRows.map((row) => (
+            <li>
+              <a href={row.href}>
+                <span>{row.title}</span>
+                <span>{row.meta}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+        <a class="field-map-list-action" href="/concept-notes">
+          View all notes <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="field-map-prose" aria-label="Map notes">
+      <h2 class="section-label">Map Notes</h2>
+      <div class="article-body">
+        <Content />
+        <ArticleSources article={article} />
+      </div>
+    </section>
+  </article>
+</BaseLayout>

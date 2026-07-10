@@ -1,0 +1,34 @@
+---
+import type { NormalizedArticle } from "../../lib/types";
+
+interface Props {
+  articles: NormalizedArticle[];
+}
+
+const { articles } = Astro.props;
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
+---
+
+<div class="archive-list">
+  {articles.map((article) => (
+    <article class="archive-entry">
+      <a class="archive-entry-link" href={article.url}>
+        <span class="archive-entry-copy">
+          <span class="story-title">{article.title}</span>
+          <span class="entry-meta">
+            <span>{formatDate(article.date)}</span>
+            <span>{article.readingTime}</span>
+          </span>
+        </span>
+        <span class="archive-entry-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </article>
+  ))}
+</div>

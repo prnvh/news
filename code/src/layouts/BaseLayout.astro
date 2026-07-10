@@ -1,8 +1,6 @@
 ---
 import "../styles/global.css";
 import { publication } from "../config/publication";
-import { getPublishedArticles } from "../lib/content";
-import NewsletterForm from "../components/newsletter/NewsletterForm.astro";
 import Analytics from "@vercel/analytics/astro";
 
 interface Props {
@@ -10,9 +8,18 @@ interface Props {
   description?: string;
   image?: string;
   canonical?: string;
+  chrome?: "journal" | "field-map";
+  sectionTitle?: string;
 }
 
-const { title, description = publication.tagline, image, canonical } =
+const {
+  title,
+  description = publication.tagline,
+  image,
+  canonical,
+  chrome = "journal",
+  sectionTitle,
+} =
   Astro.props;
 const pageTitle =
   title === publication.name ? title : `${title} - ${publication.name}`;
@@ -22,18 +29,17 @@ const ogImage = image
 const canonicalUrl =
   canonical ?? new URL(Astro.url.pathname, publication.url).href;
 const path = Astro.url.pathname;
-const articles = await getPublishedArticles();
-const latestDate =
-  [...articles].sort((a, b) => b.date.getTime() - a.date.getTime())[0]?.date ??
-  new Date();
-const formattedDate = latestDate.toLocaleDateString("en-US", {
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-});
-const isoDate = latestDate.toISOString().slice(0, 10);
+const primaryNav = [
+  { label: "Field Maps", href: "/field-maps" },
+  { label: "Paper Breakdowns", href: "/paper-breakdowns" },
+  { label: "Concept Notes", href: "/concept-notes" },
+  { label: "Field Breakdowns", href: "/field-breakdowns" },
+];
 const footerNav = [
-  ...publication.nav,
+  ...primaryNav,
+  { label: "Topics", href: "/topics" },
+  { label: "Start Here", href: "/start-here" },
+  { label: "About", href: "/about" },
   { label: "Subscribe", href: "/subscribe" },
   { label: "RSS", href: "/rss.xml" },
 ];
@@ -50,6 +56,7 @@ const footerNav = [
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={publication.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
@@ -58,12 +65,7 @@ const footerNav = [
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="theme-color" content="#ffffff" />
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -73,68 +75,66 @@ const footerNav = [
     <Analytics />
   </head>
   <body>
-    <div class="site-shell">
-      <header class="site-header">
-        <div class="top-strip">
-          <time datetime={isoDate}>{formattedDate}</time>
-          <p>{publication.tagline}</p>
-          <a href="/subscribe">Subscribe</a>
-        </div>
-        <p class="masthead-title">
-          <a href="/">{publication.name}</a>
-        </p>
-        <nav class="site-nav" aria-label="Primary">
-          <div class="nav-links">
-            {publication.nav.map((item) => (
-              <a
-                href={item.href}
-                aria-current={path === item.href ||
-                  path.startsWith(`${item.href}/`)
-                  ? "page"
-                  : undefined}
-              >
-                {item.label}
+    <div class:list={["site-frame", chrome === "field-map" && "site-frame--field-map"]}>
+      <header class:list={["site-header", chrome === "field-map" && "site-header--field-map"]}>
+        {
+          chrome === "field-map" ? (
+            <nav class="field-map-topbar" aria-label="Field map navigation">
+              <a class="field-map-back-link" href="/">
+                <span aria-hidden="true">&larr;</span>
+                <span>{publication.name}</span>
               </a>
-            ))}
-          </div>
-          <a
-            class="search-link"
-            href="/search"
-            aria-label="Search"
-            aria-current={path === "/search" ? "page" : undefined}
-          >
-            <span class="search-icon" aria-hidden="true"></span>
-          </a>
-        </nav>
+              <a class="field-map-current-link" href="/field-maps">
+                <span>{sectionTitle ?? title}</span>
+                <span aria-hidden="true">&#8964;</span>
+              </a>
+              <a class="field-map-search-link" href="/search" aria-label="Search">
+                <span>Search</span>
+                <span class="field-map-search-icon" aria-hidden="true"></span>
+              </a>
+            </nav>
+          ) : (
+            <>
+              <div class="masthead-bar">
+                <a class="menu-link" href="/all" aria-label="All entries">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </a>
+                <a class="site-wordmark" href="/" aria-label={`${publication.name} home`}>
+                  {publication.name}
+                </a>
+                <a class="search-link" href="/search" aria-label="Search">
+                  <span></span>
+                </a>
+              </div>
+              <nav class="site-nav" aria-label="Primary navigation">
+                {primaryNav.map((item) => (
+                  <a
+                    href={item.href}
+                    aria-current={path === item.href || path.startsWith(`${item.href}/`)
+                      ? "page"
+                      : undefined}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+            </>
+          )
+        }
       </header>
-      <main>
+
+      <main class:list={["site-main", chrome === "field-map" && "site-main--field-map"]}>
         <slot />
       </main>
+
       <footer class="site-footer">
-        <section class="footer-newsletter" aria-label="Newsletter">
-          <div>
-            <h2>The weekly note.</h2>
-            <p>
-              One thoughtful email on frontier AI research, technical ideas, and
-              the people building it.
-            </p>
-          </div>
-          <NewsletterForm />
-        </section>
-        <div class="footer-lower">
-          <div>
-            <p class="footer-brand">{publication.name}</p>
-            <p>{publication.tagline}</p>
-          </div>
-          <nav class="footer-link-list" aria-label="Footer">
-            {footerNav.map((item) => (
-              <a href={item.href}>{item.label}</a>
-            ))}
-          </nav>
-          <p class="footer-copy">
-            &copy; {new Date().getFullYear()} {publication.name}
-          </p>
-        </div>
+        <p>{publication.name}</p>
+        <nav aria-label="Footer navigation">
+          {footerNav.map((item) => <a href={item.href}>{item.label}</a>)}
+        </nav>
+        <p>&copy; {new Date().getFullYear()}</p>
       </footer>
     </div>
   </body>

@@ -10,9 +10,9 @@ import type {
 } from "./types";
 
 const ROUTE_PREFIX: Record<ArticleCollection, string> = {
-  briefs: "/briefs",
-  researchNotes: "/research-notes",
-  essays: "/essays",
+  briefs: "/concept-notes",
+  researchNotes: "/paper-breakdowns",
+  essays: "/field-breakdowns",
   fieldMaps: "/field-maps",
 };
 

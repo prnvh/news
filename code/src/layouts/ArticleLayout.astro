@@ -19,7 +19,13 @@ const date = article.date.toLocaleDateString("en-US", {
   day: "numeric",
   year: "numeric",
 });
-const typeLabel = article.type.replace("-", " ");
+const typeLabels: Record<NormalizedArticle["type"], string> = {
+  brief: "concept note",
+  "research-note": "paper breakdown",
+  essay: "field breakdown",
+  "field-map": "field map",
+};
+const typeLabel = typeLabels[article.type];
 const showHero = Boolean(article.heroImage && article.heroImagePosition !== "none");
 const paper =
   article.type === "research-note" && "paper" in article.data
@@ -213,7 +219,7 @@ const showRail = relatedArticles.length > 0 || showToc || pullQuote;
             {relatedArticles.length > 0 && (
               <section>
                 <h2 class="section-heading">
-                  {article.type === "research-note" ? "Related notes" : "Related reading"}
+                  {article.type === "research-note" ? "Related breakdowns" : "Related reading"}
                 </h2>
                 <div class="rail-list">
                   {relatedArticles.map((related) => (

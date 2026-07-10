@@ -117,6 +117,8 @@ const fieldMapSchema = baseArticleSchema.extend({
         title: z.string(),
         description: z.string(),
         readingTime: z.string().optional(),
+        notesCount: z.number().int().nonnegative().optional(),
+        papersCount: z.number().int().nonnegative().optional(),
         anchor: z.string(),
       }),
     )

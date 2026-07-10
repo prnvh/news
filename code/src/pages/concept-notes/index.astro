@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArchiveList from "../../components/editorial/ArchiveList.astro";
+import { getBriefs } from "../../lib/content";
+
+const articles = (await getBriefs()).sort(
+  (a, b) => b.date.getTime() - a.date.getTime(),
+);
+---
+<BaseLayout title="Concept Notes" description="Clear explanations of individual technical concepts.">
+  <section class="archive-header">
+    <p class="eyebrow">Concept notes</p>
+    <h1 class="article-title">Concept Notes</h1>
+    <p class="article-subtitle">One concept at a time: the small blocks that make the field maps readable.</p>
+  </section>
+  {
+    articles.length === 0 ? (
+      <p>No published concept notes yet.</p>
+    ) : (
+      <ArchiveList articles={articles} />
+    )
+  }
+</BaseLayout>

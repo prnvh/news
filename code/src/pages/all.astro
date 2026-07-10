@@ -1,0 +1,17 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ArchiveList from "../components/editorial/ArchiveList.astro";
+import { getPublishedArticles } from "../lib/content";
+
+const articles = [...(await getPublishedArticles())].sort(
+  (a, b) => b.date.getTime() - a.date.getTime(),
+);
+---
+<BaseLayout title="All Entries" description="All published entries from Frontier Manual.">
+  <section class="archive-header">
+    <p class="eyebrow">All</p>
+    <h1 class="article-title">All Entries</h1>
+    <p class="article-subtitle">Every published field map, paper breakdown, concept note, and field breakdown.</p>
+  </section>
+  <ArchiveList articles={articles} />
+</BaseLayout>

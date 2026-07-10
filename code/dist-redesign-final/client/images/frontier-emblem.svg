@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Frontier Manual emblem">
+  <rect width="128" height="128" rx="0" fill="#f4efe7"/>
+  <g fill="none" stroke="#9d2528" stroke-linecap="square" stroke-linejoin="miter">
+    <rect x="18" y="18" width="92" height="92" stroke-width="5"/>
+    <rect x="25" y="25" width="78" height="78" stroke-width="2.5"/>
+    <path d="M103 66 L110 56" stroke-width="3"/>
+    <path d="M78 103 L103 72" stroke-width="2.5"/>
+    <path d="M78 103 H103 V72 L78 103 Z" stroke-width="2.5"/>
+    <path d="M60 35 H78 V78 H60 Z" stroke-width="3.5"/>
+    <path d="M54 78 H84 V86 H54 Z" stroke-width="3.5"/>
+    <path d="M49 86 H89 V92 H49 Z" stroke-width="3.5"/>
+    <path d="M43 92 H95 V98 H43 Z" stroke-width="3.5"/>
+    <path d="M36 98 H102 V104 H36 Z" stroke-width="3.5"/>
+  </g>
+  <circle cx="39" cy="39" r="5.5" fill="#9d2528"/>
+  <g fill="#9d2528">
+    <circle cx="91" cy="78" r="1"/>
+    <circle cx="97" cy="78" r="1"/>
+    <circle cx="91" cy="84" r="1"/>
+    <circle cx="97" cy="84" r="1"/>
+    <circle cx="85" cy="90" r="1"/>
+    <circle cx="91" cy="90" r="1"/>
+    <circle cx="97" cy="90" r="1"/>
+    <circle cx="79" cy="96" r="1"/>
+    <circle cx="85" cy="96" r="1"/>
+    <circle cx="91" cy="96" r="1"/>
+    <circle cx="97" cy="96" r="1"/>
+  </g>
+</svg>
