@@ -7,6 +7,7 @@ interface Props {
   page: CollectionEntry<"pages">;
   Content: import("astro").MarkdownInstance<unknown>["Content"];
 }
+
 const { page, Content } = Astro.props;
 const description = page.data.description ?? page.data.subtitle ?? publication.tagline;
 const title = page.data.seo?.title ?? page.data.title;
@@ -16,12 +17,14 @@ const title = page.data.seo?.title ?? page.data.title;
   description={page.data.seo?.description ?? description}
   image={page.data.seo?.image}
 >
-  <article class="article-body" data-pagefind-body>
-    <header class="archive-header">
-      <h1 class="article-title">{page.data.title}</h1>
-      {page.data.subtitle && <p class="article-subtitle">{page.data.subtitle}</p>}
+  <article class="journal-article journal-page" data-pagefind-body>
+    <header class="journal-article-header">
+      <h1 class="journal-article-title">{page.data.title}</h1>
+      {page.data.subtitle && <p class="journal-article-date">{page.data.subtitle}</p>}
     </header>
-    <Content />
+    <div class="journal-article-body article-body">
+      <Content />
+    </div>
     <slot />
   </article>
 </BaseLayout>

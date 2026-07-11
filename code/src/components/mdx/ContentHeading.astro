@@ -1,0 +1,15 @@
+---
+import { shortSectionLabel } from "../../lib/section-labels";
+
+interface Props {
+  id?: string;
+}
+
+const { id } = Astro.props;
+const rendered = Astro.slots.has("default") ? await Astro.slots.render("default") : "";
+const text = rendered.replace(/<[^>]*>/g, "").trim();
+const label = shortSectionLabel(text);
+const display = label.endsWith(".") ? label : `${label}.`;
+---
+
+<h2 id={id} class="section-inline-label"><em>{display}</em></h2>

@@ -1,5 +1,86 @@
-import { getPublishedArticles } from "./content";
-import type { NormalizedArticle } from "./types";
+import {
+  getBriefs,
+  getEssays,
+  getFieldMaps,
+  getPublishedArticles,
+  getResearchNotes,
+} from "./content";
+import { formatRelativeDate } from "./format-date";
+import type { ArticleType, NormalizedArticle } from "./types";
+
+const HOMEPAGE_SECTION_LIMIT = 5;
+
+export interface JournalRow {
+  title: string;
+  meta: string;
+  href: string;
+}
+
+export interface JournalSection {
+  label: string;
+  href: string;
+  rows: JournalRow[];
+}
+
+const JOURNAL_SECTION_CONFIG: Array<{
+  label: string;
+  href: string;
+  type: ArticleType;
+  metaPrefix: "Updated" | "";
+}> = [
+  { label: "Field Maps", href: "/field-maps", type: "field-map", metaPrefix: "Updated" },
+  {
+    label: "Paper Breakdowns",
+    href: "/paper-breakdowns",
+    type: "research-note",
+    metaPrefix: "",
+  },
+  { label: "Concept Notes", href: "/concept-notes", type: "brief", metaPrefix: "" },
+  {
+    label: "Field Breakdowns",
+    href: "/field-breakdowns",
+    type: "essay",
+    metaPrefix: "Updated",
+  },
+];
+
+function sortByDate(articles: NormalizedArticle[]): NormalizedArticle[] {
+  return [...articles].sort((a, b) => b.date.getTime() - a.date.getTime());
+}
+
+function journalMeta(
+  article: NormalizedArticle,
+  prefix: "Updated" | "",
+): string {
+  const date = article.updated ?? article.date;
+  return formatRelativeDate(date, prefix);
+}
+
+function toJournalRows(
+  articles: NormalizedArticle[],
+  metaPrefix: "Updated" | "",
+): JournalRow[] {
+  return articles.slice(0, HOMEPAGE_SECTION_LIMIT).map((article) => ({
+    title: article.title,
+    meta: journalMeta(article, metaPrefix),
+    href: article.url,
+  }));
+}
+
+export async function getJournalSections(): Promise<JournalSection[]> {
+  const byType: Record<ArticleType, NormalizedArticle[]> = {
+    "field-map": sortByDate(await getFieldMaps()),
+    brief: sortByDate(await getBriefs()),
+    "research-note": sortByDate(await getResearchNotes()),
+    essay: sortByDate(await getEssays()),
+  };
+
+  return JOURNAL_SECTION_CONFIG.map((section) => ({
+    label: section.label,
+    href: section.href,
+    rows: toJournalRows(byType[section.type], section.metaPrefix),
+  })).filter((section) => section.rows.length > 0);
+}
 
 export type HomepageMode =
   | "empty"
@@ -20,10 +101,6 @@ export interface HomepageModel {
   hasResearchNotes: boolean;
   hasEssays: boolean;
   hasFieldMaps: boolean;
-}
-
-function sortByDate(articles: NormalizedArticle[]): NormalizedArticle[] {
-  return [...articles].sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 
 function pickLead(articles: NormalizedArticle[]): NormalizedArticle | undefined {

@@ -1,0 +1,59 @@
+---
+import {
+  formatConceptLabels,
+  getFieldForArticle,
+  getRelatedPaperCount,
+} from "../../lib/article-metadata";
+import type { NormalizedArticle } from "../../lib/types";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  article: NormalizedArticle;
+  topicObjects: CollectionEntry<"topics">[];
+}
+
+const { article, topicObjects } = Astro.props;
+const field = await getFieldForArticle(article);
+const relatedPaperCount = await getRelatedPaperCount(article);
+const concepts = formatConceptLabels(topicObjects);
+const relatedHref =
+  article.type === "research-note"
+    ? "/paper-breakdowns"
+    : field
+      ? field.url
+      : "/paper-breakdowns";
+---
+
+<footer class="article-metadata" aria-label="Article metadata">
+  <div class="article-metadata-grid">
+    <div class="article-metadata-item">
+      <p class="metadata-label">Field</p>
+      {
+        field ? (
+          <p class="metadata-value">
+            <a href={field.url}>{field.title}</a>
+          </p>
+        ) : (
+          <p class="metadata-value">—</p>
+        )
+      }
+    </div>
+    <div class="article-metadata-item">
+      <p class="metadata-label">Concepts</p>
+      <p class="metadata-value">{concepts}</p>
+    </div>
+    <div class="article-metadata-item">
+      <p class="metadata-label">{article.type === "research-note" ? "Related papers" : "Related reading"}</p>
+      {
+        relatedPaperCount > 0 ? (
+          <a class="metadata-value metadata-link" href={relatedHref}>
+            <span>{relatedPaperCount}</span>
+            <span class="metadata-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        ) : (
+          <p class="metadata-value">—</p>
+        )
+      }
+    </div>
+  </div>
+</footer>

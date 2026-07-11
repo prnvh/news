@@ -1,0 +1,29 @@
+﻿---
+title: "A Survey of Spiking Neural Networks in Robotics"
+subtitle: "How event-driven neurons, surrogate gradients, and neuromorphic hardware are being applied to perception and control."
+date: 2026-07-06
+type: research-note
+author: Frontier Manual
+topics: ["ai", "hardware", "systems"]
+tags: ["spiking neural networks", "robotics", "neuromorphic"]
+summary:
+  - "Spiking neural networks process information as discrete temporal events."
+  - "Surveys catalog applications in vision, locomotion, and sensor fusion."
+  - "The main trade-off is efficiency versus training difficulty."
+readingTime: "10 min read"
+paper:
+  title: "Spiking Neural Networks for Robotics: A Review"
+  authors: ["Various"]
+  year: 2024
+  source: "Survey literature"
+resultType: paper
+status: published
+---
+
+Robotic systems face hard power and latency constraints. Dense frame-based networks waste compute on static regions, which makes them a poor fit for edge robots that need to react quickly without burning through a battery.
+
+Spiking neural networks represent information as spike sequences rather than dense activations. Inputs can come from event cameras or from converted frame data, and the network only updates when something changes. Surveys of the field catalog architectures, training methods, and deployment targets across neuromorphic platforms, with applications in vision, locomotion, and sensor fusion.
+
+The result that matters is practical: SNNs show promise for low-latency perception and ultra-low-power inference, especially when paired with event data. That promise rests on assumptions that are easy to miss—access to event sensors or good spike conversion, and hardware that actually exploits sparsity instead of simulating spikes on conventional chips.
+
+This work connects directly to event-based vision, neuromorphic chips, and the broader neuromorphic robotics field map. One persistent confusion is the blurry line between genuinely spiking computation and converted ANNs running on neuromorphic hardware. Still, the buildable next step is clear: an event-camera perception pipeline with an SNN encoder on a low-power edge board. On the field map, that anchors Learning and Compute in neuromorphic robotics.

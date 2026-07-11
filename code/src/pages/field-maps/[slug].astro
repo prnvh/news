@@ -23,8 +23,14 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const article = normalizeArticle(entry);
 const articleTopics = new Set(article.topics.map((topic) => topic.toLowerCase()));
-const sharesTopic = (candidate: typeof article) =>
-  candidate.topics.some((topic) => articleTopics.has(topic.toLowerCase()));
+const BROAD_TOPICS = new Set(["ai", "technical-world"]);
+const sharesTopic = (candidate: typeof article) => {
+  const shared = candidate.topics
+    .map((topic) => topic.toLowerCase())
+    .filter((topic) => articleTopics.has(topic));
+  const specific = shared.filter((topic) => !BROAD_TOPICS.has(topic));
+  return specific.length > 0;
+};
 const sortNewest = (a: typeof article, b: typeof article) =>
   b.date.getTime() - a.date.getTime();
 const recentPapers = (await getResearchNotes())

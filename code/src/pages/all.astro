@@ -11,7 +11,6 @@ const articles = [...(await getPublishedArticles())].sort(
   <section class="archive-header">
     <p class="eyebrow">All</p>
     <h1 class="article-title">All Entries</h1>
-    <p class="article-subtitle">Every published field map, paper breakdown, concept note, and field breakdown.</p>
   </section>
   <ArchiveList articles={articles} />
 </BaseLayout>

@@ -1,73 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { publication } from "../config/publication";
+import { getJournalSections } from "../lib/homepage";
 
-type JournalRow = {
-  title: string;
-  meta: string;
-  href: string;
-};
-
-type JournalSection = {
-  label: string;
-  href: string;
-  rows: JournalRow[];
-};
-
-const sections: JournalSection[] = [
-  {
-    label: "Field Maps",
-    href: "/field-maps",
-    rows: [
-      { title: "Neuromorphic Robotics", meta: "Updated 2 days ago", href: "/field-maps" },
-      { title: "AI for Science", meta: "Updated 5 days ago", href: "/field-maps" },
-      { title: "Autonomous Labs", meta: "Updated 1 week ago", href: "/field-maps" },
-      { title: "Embodied Intelligence", meta: "Updated 1 week ago", href: "/field-maps" },
-      { title: "Scientific Automation", meta: "Updated 2 weeks ago", href: "/field-maps" },
-    ],
-  },
-  {
-    label: "Paper Breakdowns",
-    href: "/paper-breakdowns",
-    rows: [
-      { title: "Taming Latent Diffusion for High-Resolution Synthesis", meta: "2 days ago", href: "/paper-breakdowns" },
-      { title: "A Survey of Spiking Neural Networks in Robotics", meta: "4 days ago", href: "/paper-breakdowns" },
-      {
-        title: "RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control",
-        meta: "1 week ago",
-        href: "/paper-breakdowns",
-      },
-      { title: "Event-Based Vision: A Survey", meta: "1 week ago", href: "/paper-breakdowns" },
-      {
-        title: "Learning to Plan in High-Dimensional Continuous Spaces",
-        meta: "2 weeks ago",
-        href: "/paper-breakdowns",
-      },
-    ],
-  },
-  {
-    label: "Concept Notes",
-    href: "/concept-notes",
-    rows: [
-      { title: "What is event-based vision?", meta: "3 days ago", href: "/concept-notes" },
-      { title: "What are spiking neural networks?", meta: "1 week ago", href: "/concept-notes" },
-      { title: "Why do neuromorphic chips matter?", meta: "1 week ago", href: "/concept-notes" },
-      { title: "What is closed-loop experimentation?", meta: "2 weeks ago", href: "/concept-notes" },
-      { title: "What is embodied intelligence?", meta: "2 weeks ago", href: "/concept-notes" },
-    ],
-  },
-  {
-    label: "Field Breakdowns",
-    href: "/field-breakdowns",
-    rows: [
-      { title: "Robotic Foundation Models", meta: "Updated 3 days ago", href: "/field-breakdowns" },
-      { title: "Event Cameras and Sparse Vision", meta: "Updated 1 week ago", href: "/field-breakdowns" },
-      { title: "Lab Automation Stacks", meta: "Updated 1 week ago", href: "/field-breakdowns" },
-      { title: "Closed-Loop Experimentation", meta: "Updated 2 weeks ago", href: "/field-breakdowns" },
-      { title: "Embodied Evaluation", meta: "Updated 2 weeks ago", href: "/field-breakdowns" },
-    ],
-  },
-];
+const sections = await getJournalSections();
 ---
 <BaseLayout title={publication.name} description={publication.tagline}>
   <div class="home-page" aria-label="Journal sections">

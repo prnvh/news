@@ -18,21 +18,22 @@ mapSections:
     title: ""
     description: ""
     readingTime: ""
-    notesCount: 0
-    papersCount: 0
     anchor: ""
+    # href: /concept-notes/your-note   # optional: link this part to a real page
 difficulty: intermediate
-heroImage: "" # Put files in articles/assets/images and use /images/file-name.jpg
+heroImage: ""
 heroImageAlt: ""
 heroImagePosition: right
 sources: []
 status: draft
 ---
 
-This is a living atlas. Update it as paper breakdowns, concept notes, and field breakdowns change the map.
+Add as many `mapSections` as the field needs. The concept rail scales to any count.
 
-Use 5-7 `mapSections` for the top concept rail. Six concepts is the preferred shape because it matches the standard field-map design.
+For each part:
+- `title`: short label (1-3 words)
+- `description`: one short sentence
+- `anchor`: slug used for matching related notes/papers
+- `href` (optional): direct link to a concept note, paper breakdown, or field breakdown
 
-For every concept, keep `title` to 1-3 words when possible, keep `description` to 1-2 short sentences, and set `notesCount` / `papersCount` from the current map inventory.
-
-Make the headings below correspond to the `anchor` values so the concept cards can jump to the right section.
+Related papers and concept notes are pulled automatically from shared `topics`.

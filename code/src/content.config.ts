@@ -120,6 +120,7 @@ const fieldMapSchema = baseArticleSchema.extend({
         notesCount: z.number().int().nonnegative().optional(),
         papersCount: z.number().int().nonnegative().optional(),
         anchor: z.string(),
+        href: z.string().optional(),
       }),
     )
     .min(1, "mapSections must have at least one section"),
@@ -169,18 +170,24 @@ const topicSchema = z.object({
 
 export const collections = {
   briefs: defineCollection({
-    loader: glob({ pattern: articlePattern, base: `${articlesRoot}/briefs` }),
+    loader: glob({
+      pattern: articlePattern,
+      base: `${articlesRoot}/concept-notes`,
+    }),
     schema: briefSchema,
   }),
   researchNotes: defineCollection({
     loader: glob({
       pattern: articlePattern,
-      base: `${articlesRoot}/research-notes`,
+      base: `${articlesRoot}/paper-breakdowns`,
     }),
     schema: researchNoteSchema,
   }),
   essays: defineCollection({
-    loader: glob({ pattern: articlePattern, base: `${articlesRoot}/essays` }),
+    loader: glob({
+      pattern: articlePattern,
+      base: `${articlesRoot}/field-breakdowns`,
+    }),
     schema: essaySchema,
   }),
   fieldMaps: defineCollection({

@@ -8,7 +8,7 @@ interface Props {
   description?: string;
   image?: string;
   canonical?: string;
-  chrome?: "journal" | "field-map";
+  chrome?: "site" | "article" | "field-map";
   sectionTitle?: string;
 }
 
@@ -17,10 +17,9 @@ const {
   description = publication.tagline,
   image,
   canonical,
-  chrome = "journal",
+  chrome = "site",
   sectionTitle,
-} =
-  Astro.props;
+} = Astro.props;
 const pageTitle =
   title === publication.name ? title : `${title} - ${publication.name}`;
 const ogImage = image
@@ -76,7 +75,13 @@ const footerNav = [
   </head>
   <body>
     <div class:list={["site-frame", chrome === "field-map" && "site-frame--field-map"]}>
-      <header class:list={["site-header", chrome === "field-map" && "site-header--field-map"]}>
+      <header
+        class:list={[
+          "site-header",
+          chrome === "field-map" && "site-header--field-map",
+          chrome === "article" && "site-header--article",
+        ]}
+      >
         {
           chrome === "field-map" ? (
             <nav class="field-map-topbar" aria-label="Field map navigation">
@@ -91,6 +96,17 @@ const footerNav = [
               <a class="field-map-search-link" href="/search" aria-label="Search">
                 <span>Search</span>
                 <span class="field-map-search-icon" aria-hidden="true"></span>
+              </a>
+            </nav>
+          ) : chrome === "article" ? (
+            <nav class="journal-topbar" aria-label="Journal navigation">
+              <a class="journal-back-link" href="/">
+                <span aria-hidden="true">&larr;</span>
+                <span>Journal</span>
+              </a>
+              <a class="journal-search-link" href="/search" aria-label="Search">
+                <span>Search</span>
+                <span class="journal-search-icon" aria-hidden="true"></span>
               </a>
             </nav>
           ) : (
@@ -125,17 +141,36 @@ const footerNav = [
         }
       </header>
 
-      <main class:list={["site-main", chrome === "field-map" && "site-main--field-map"]}>
+      <main
+        class:list={[
+          "site-main",
+          chrome === "field-map" && "site-main--field-map",
+          chrome === "article" && "site-main--article",
+        ]}
+      >
         <slot />
       </main>
 
-      <footer class="site-footer">
-        <p>{publication.name}</p>
-        <nav aria-label="Footer navigation">
-          {footerNav.map((item) => <a href={item.href}>{item.label}</a>)}
-        </nav>
-        <p>&copy; {new Date().getFullYear()}</p>
-      </footer>
+      {
+        chrome === "site" && (
+          <footer class="site-footer">
+            <p>{publication.name}</p>
+            <nav aria-label="Footer navigation">
+              {footerNav.map((item) => <a href={item.href}>{item.label}</a>)}
+            </nav>
+            <p>&copy; {new Date().getFullYear()}</p>
+          </footer>
+        )
+      }
+
+      {
+        chrome === "field-map" && (
+          <footer class="site-footer">
+            <p>{publication.name}</p>
+            <p>&copy; {new Date().getFullYear()}</p>
+          </footer>
+        )
+      }
     </div>
   </body>
 </html>

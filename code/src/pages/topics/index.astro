@@ -17,19 +17,6 @@ const topicCount = (slug: string, name: string) =>
       );
     }),
   ).length;
-const latestForTopic = (slug: string, name: string) =>
-  articles
-    .filter((article) =>
-      article.topics.some((topic) => {
-        const value = normalized(topic);
-        return (
-          value === normalized(slug) ||
-          value === normalized(name) ||
-          value.replace(/\s+/g, "-") === normalized(slug)
-        );
-      }),
-    )
-    .sort((a, b) => b.date.getTime() - a.date.getTime())[0];
 const sorted = [...topics].sort((a, b) =>
   a.data.name.localeCompare(b.data.name),
 );
@@ -38,24 +25,19 @@ const sorted = [...topics].sort((a, b) =>
   <section class="archive-header">
     <p class="eyebrow">Topics</p>
     <h1 class="article-title">Topics</h1>
-    <p class="article-subtitle">A curated index of research areas covered by the publication.</p>
   </section>
   <div class="archive-list">
     {sorted.map((topic) => {
       const count = topicCount(topic.data.slug, topic.data.name);
-      const latest = latestForTopic(topic.data.slug, topic.data.name);
       return (
-        <article class="archive-row">
-          <p class="card-meta"><span>{count} {count === 1 ? "piece" : "pieces"}</span></p>
-          <div>
-            <h2 class="story-title">
-              <a href={`/topics/${topic.data.slug}`}>{topic.data.name}</a>
-            </h2>
-            <p class="story-dek">{topic.data.description}</p>
-          </div>
-          <p class="card-meta">
-            {latest ? <span>{latest.title}</span> : <span>No coverage yet</span>}
-          </p>
+        <article class="archive-entry">
+          <a class="archive-entry-link" href={`/topics/${topic.data.slug}`}>
+            <span class="archive-entry-copy">
+              <span class="story-title">{topic.data.name}</span>
+              <span class="entry-meta">{count} {count === 1 ? "piece" : "pieces"}</span>
+            </span>
+            <span class="archive-entry-arrow" aria-hidden="true">&rarr;</span>
+          </a>
         </article>
       );
     })}
