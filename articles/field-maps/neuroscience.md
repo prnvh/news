@@ -18,19 +18,16 @@ mapSections:
   - number: "01"
     title: "Cognition"
     description: "How brains plan, decide, remember, and coordinate action in the world."
-    slugs:
-      -
+    slugs: []
   - number: "02"
     title: "Brain Computer Interface"
     description: "Reading from and writing to neural circuits for communication, control, and measurement."
-    slugs:
-      -
+    slugs: []
   - number: "03"
     title: "Representation"
     description: "How neural systems encode sensory input, latent structure, and actionable world models."
     slugs:
       - spatial-and-network-principles-behind-neural-locomotion
-      
 sources: []
 status: published
 ---

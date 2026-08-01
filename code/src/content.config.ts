@@ -129,7 +129,7 @@ const fieldMapSchema = baseArticleSchema.extend({
         href: z.string().optional(),
         /** Article slugs (concept notes or paper breakdowns) shown under this section. */
         slugs: z
-          .array(z.union([z.string(), z.null()]))
+          .array(z.unknown())
           .optional()
           .transform((list) =>
             list

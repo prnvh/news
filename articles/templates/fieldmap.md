@@ -18,13 +18,11 @@ mapSections:
   - number: "01"
     title: ""
     description: ""
-    slugs:
-      -
+    slugs: []
   - number: "02"
     title: ""
     description: ""
-    slugs:
-      -
+    slugs: []
 sources: []
 status: draft
 ---
