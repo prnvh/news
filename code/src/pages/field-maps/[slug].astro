@@ -2,9 +2,10 @@
 import { getCollection, render } from "astro:content";
 import FieldMapLayout from "../../layouts/FieldMapLayout.astro";
 import {
+  getAllArticles,
   getBriefs,
   getResearchNotes,
-  isVisibleInProduction,
+  isSiteVisible,
   normalizeArticle,
 } from "../../lib/content";
 import { resolveSlug } from "../../lib/slugs";
@@ -12,7 +13,7 @@ import { resolveSlug } from "../../lib/slugs";
 export async function getStaticPaths() {
   const entries = await getCollection("fieldMaps");
   return entries
-    .filter((e) => isVisibleInProduction(e.data.status))
+    .filter((e) => isSiteVisible(e.data.status))
     .map((entry) => ({
       params: { slug: resolveSlug(entry.id, entry.data.slug) },
       props: { entry },
@@ -21,9 +22,16 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const hasBody = Boolean(entry.body?.trim());
 const article = normalizeArticle(entry);
 const articleTopics = new Set(article.topics.map((topic) => topic.toLowerCase()));
-const BROAD_TOPICS = new Set(["ai", "technical-world"]);
+const BROAD_TOPICS = new Set([
+  "ai",
+  "technical-world",
+  "hardware",
+  "compute",
+  "systems",
+]);
 const sharesTopic = (candidate: typeof article) => {
   const shared = candidate.topics
     .map((topic) => topic.toLowerCase())
@@ -33,6 +41,15 @@ const sharesTopic = (candidate: typeof article) => {
 };
 const sortNewest = (a: typeof article, b: typeof article) =>
   b.date.getTime() - a.date.getTime();
+
+const allNotes = (await getAllArticles())
+  .filter(
+    (item) =>
+      isSiteVisible(item.status) &&
+      (item.type === "brief" || item.type === "research-note"),
+  )
+  .sort(sortNewest);
+
 const recentPapers = (await getResearchNotes())
   .filter(sharesTopic)
   .sort(sortNewest);
@@ -44,5 +61,6 @@ const relatedConceptNotes = (await getBriefs())
   article={article}
   recentPapers={recentPapers}
   relatedConceptNotes={relatedConceptNotes}
-  Content={Content}
+  allNotes={allNotes}
+  Content={hasBody ? Content : undefined}
 />

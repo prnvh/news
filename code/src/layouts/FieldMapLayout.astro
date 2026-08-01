@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import DraftBanner from "../components/editorial/DraftBanner.astro";
 import { articleSeo } from "../lib/content";
 import type { NormalizedArticle } from "../lib/types";
 
@@ -7,16 +8,30 @@ interface Props {
   article: NormalizedArticle;
   recentPapers: NormalizedArticle[];
   relatedConceptNotes: NormalizedArticle[];
+  /** All site-visible concept notes + paper breakdowns, for mapSections[].slugs */
+  allNotes?: NormalizedArticle[];
   Content?: import("astro").MarkdownInstance<unknown>["Content"];
 }
 
-const { article, recentPapers, relatedConceptNotes } = Astro.props;
+const {
+  article,
+  recentPapers,
+  relatedConceptNotes,
+  allNotes = [...relatedConceptNotes, ...recentPapers],
+  Content,
+} = Astro.props;
 const seo = articleSeo(article);
 const fieldSections =
   article.type === "field-map" && "mapSections" in article.data
     ? article.data.mapSections
     : [];
 const concepts = fieldSections;
+const orientation =
+  article.type === "field-map" &&
+  "orientation" in article.data &&
+  typeof article.data.orientation === "string"
+    ? article.data.orientation
+    : article.subtitle;
 
 const updatedDate = article.updated ?? article.date;
 
@@ -58,6 +73,14 @@ function articleText(item: NormalizedArticle) {
     .toLowerCase();
 }
 
+function sectionAnchor(title: string, anchor?: string) {
+  if (anchor?.trim()) return anchor.trim();
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function matchesConcept(item: NormalizedArticle, title: string, anchor: string) {
   const hay = ` ${articleText(item)} `;
   const needles = [
@@ -77,46 +100,99 @@ function matchesConcept(item: NormalizedArticle, title: string, anchor: string) 
   });
 }
 
+function resolveBySlugs(
+  pool: NormalizedArticle[],
+  slugs: string[] | undefined,
+): NormalizedArticle[] | null {
+  if (!Array.isArray(slugs)) return null;
+  const bySlug = new Map(pool.map((item) => [item.slug, item]));
+  return slugs
+    .map((slug) => bySlug.get(slug))
+    .filter((item): item is NormalizedArticle => Boolean(item));
+}
+
 const updatedLabel = relativeUpdate(updatedDate);
 
 const conceptCards = concepts.map((concept) => {
-  const notes = relatedConceptNotes.filter((item) =>
-    matchesConcept(item, concept.title, concept.anchor),
+  const anchor = sectionAnchor(
+    concept.title,
+    "anchor" in concept && typeof concept.anchor === "string"
+      ? concept.anchor
+      : undefined,
   );
-  const papers = recentPapers.filter((item) =>
-    matchesConcept(item, concept.title, concept.anchor),
+  const curated = resolveBySlugs(
+    allNotes,
+    "slugs" in concept ? concept.slugs : undefined,
   );
+  const linked =
+    curated ??
+    [...relatedConceptNotes, ...recentPapers].filter((item) =>
+      matchesConcept(item, concept.title, anchor),
+    );
+  const notes = linked.filter((item) => item.type === "brief");
+  const papers = linked.filter((item) => item.type === "research-note");
+  const hasCuratedLists = curated !== null;
   const href =
     ("href" in concept && typeof concept.href === "string" && concept.href) ||
-    notes[0]?.url ||
-    papers[0]?.url ||
-    undefined;
+    (!hasCuratedLists
+      ? linked[0]?.url || `#${anchor}`
+      : linked.length === 1
+        ? linked[0]?.url
+        : undefined);
   const notesCount =
     typeof concept.notesCount === "number" ? concept.notesCount : notes.length;
   const papersCount =
     typeof concept.papersCount === "number" ? concept.papersCount : papers.length;
+  const sectionLinks = linked.map((item) => ({
+    title: item.title,
+    href: item.url,
+    kind: item.type === "brief" ? ("note" as const) : ("paper" as const),
+  }));
 
   return {
     ...concept,
+    anchor,
     href,
+    notes,
+    papers,
+    linked,
     notesCount,
     papersCount,
+    hasCuratedLists,
+    sectionLinks,
+    showSectionLinks: hasCuratedLists && sectionLinks.length > 0,
   };
 });
 
-const paperRows = recentPapers.slice(0, 3).map((item) => ({
+const curatedFromSections = [
+  ...new Map(
+    conceptCards.flatMap((concept) => concept.linked).map((item) => [item.slug, item]),
+  ).values(),
+];
+
+const paperSource =
+  recentPapers.length > 0
+    ? recentPapers
+    : curatedFromSections.filter((item) => item.type === "research-note");
+const noteSource =
+  relatedConceptNotes.length > 0
+    ? relatedConceptNotes
+    : curatedFromSections.filter((item) => item.type === "brief");
+
+const paperRows = paperSource.slice(0, 3).map((item) => ({
   title: item.title,
   href: item.url,
   meta: formatRowDate(item.date),
 }));
 
-const noteRows = relatedConceptNotes.slice(0, 3).map((item) => ({
+const noteRows = noteSource.slice(0, 3).map((item) => ({
   title: item.title,
   href: item.url,
   meta: formatRowDate(item.date),
 }));
 
 const showLists = paperRows.length > 0 || noteRows.length > 0;
+const isDraft = article.status === "draft";
 ---
 <BaseLayout
   title={seo.title}
@@ -126,21 +202,29 @@ const showLists = paperRows.length > 0 || noteRows.length > 0;
   chrome="field-map"
   sectionTitle={article.title}
 >
+  <DraftBanner status={article.status} />
   <article
     class="field-map-page"
-    data-pagefind-body
-    data-pagefind-meta={`type:${article.type}`}
+    data-pagefind-body={isDraft ? undefined : true}
+    data-pagefind-ignore={isDraft ? true : undefined}
+    data-pagefind-meta={isDraft ? undefined : `type:${article.type}`}
   >
-    <span
-      class="visually-hidden"
-      aria-hidden="true"
-      data-pagefind-meta={`topics:${article.topics.join(", ")}`}
-    />
-    <span
-      class="visually-hidden"
-      aria-hidden="true"
-      data-pagefind-meta={`tags:${article.tags.join(", ")}`}
-    />
+    {
+      !isDraft && (
+        <>
+          <span
+            class="visually-hidden"
+            aria-hidden="true"
+            data-pagefind-meta={`topics:${article.topics.join(", ")}`}
+          />
+          <span
+            class="visually-hidden"
+            aria-hidden="true"
+            data-pagefind-meta={`tags:${article.tags.join(", ")}`}
+          />
+        </>
+      )
+    }
 
     <header class="field-map-hero">
       <div>
@@ -148,7 +232,7 @@ const showLists = paperRows.length > 0 || noteRows.length > 0;
         <h1>{article.title}</h1>
         <p class="field-map-updated">Updated {updatedLabel}</p>
       </div>
-      <p>{article.subtitle}</p>
+      <p>{orientation}</p>
     </header>
 
     <section class="field-map-concepts" aria-labelledby="field-map-concepts-title">
@@ -167,9 +251,9 @@ const showLists = paperRows.length > 0 || noteRows.length > 0;
             <ol class="field-map-concept-grid">
               {conceptCards.map((concept) => (
                 <li>
-                  {concept.href ? (
+                  {concept.href && !concept.showSectionLinks ? (
                     <a class="field-map-concept field-map-concept--link" href={concept.href}>
-                      <h3>{concept.title}</h3>
+                      <h3 id={concept.anchor}>{concept.title}</h3>
                       <p>{concept.description}</p>
                       <div class="field-map-concept-footer">
                         <p>
@@ -191,11 +275,44 @@ const showLists = paperRows.length > 0 || noteRows.length > 0;
                     </a>
                   ) : (
                     <article class="field-map-concept">
-                      <h3>{concept.title}</h3>
+                      <h3 id={concept.anchor}>{concept.title}</h3>
                       <p>{concept.description}</p>
+                      {concept.showSectionLinks && (
+                        <ul class="field-map-section-links">
+                          {concept.sectionLinks.map((link) => (
+                            <li>
+                              <a href={link.href}>
+                                <span class="field-map-section-link-kind">
+                                  {link.kind === "note" ? "Note" : "Paper"}
+                                </span>
+                                <span>{link.title}</span>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                       <div class="field-map-concept-footer">
-                        <p></p>
-                        <span class="field-map-concept-arrow field-map-concept-arrow--muted" aria-hidden="true">
+                        <p>
+                          {concept.notesCount > 0 && (
+                            <span>
+                              {concept.notesCount}{" "}
+                              {concept.notesCount === 1 ? "note" : "notes"}
+                            </span>
+                          )}
+                          {concept.papersCount > 0 && (
+                            <span>
+                              {concept.papersCount}{" "}
+                              {concept.papersCount === 1 ? "paper" : "papers"}
+                            </span>
+                          )}
+                        </p>
+                        <span
+                          class:list={[
+                            "field-map-concept-arrow",
+                            { "field-map-concept-arrow--muted": !concept.href },
+                          ]}
+                          aria-hidden="true"
+                        >
                           &rarr;
                         </span>
                       </div>
@@ -249,6 +366,17 @@ const showLists = paperRows.length > 0 || noteRows.length > 0;
               </a>
             </div>
           )}
+        </section>
+      )
+    }
+
+    {
+      Content && (
+        <section class="field-map-prose" aria-label="Map notes">
+          <h2 class="section-label">Map Notes</h2>
+          <div class="article-body">
+            <Content />
+          </div>
         </section>
       )
     }

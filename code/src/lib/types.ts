@@ -25,7 +25,7 @@ export interface NormalizedArticle {
   collection: ArticleCollection;
   type: ArticleType;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   description: string;
   date: Date;
   updated?: Date;

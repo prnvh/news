@@ -909,6 +909,19 @@ td {
   line-height: 1.55;
 }
 
+.draft-banner {
+  margin: 0 0 1.5rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.draft-banner code {
+  font-size: 0.82em;
+}
+
 .journal-article {
   padding-top: 56px;
 }
@@ -1374,8 +1387,8 @@ td {
 }
 
 .field-map-concept {
-  display: grid;
-  grid-template-rows: auto minmax(5.7rem, 1fr) auto;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   min-height: 197px;
   padding: 0 20px 0 0;
@@ -1421,10 +1434,42 @@ td {
 
 .field-map-concept > p {
   max-width: none;
+  flex: 1 1 auto;
   margin: 0;
   color: #3f4246;
   font-size: 0.82rem;
   line-height: 1.7;
+}
+
+.field-map-section-links {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.field-map-section-links a {
+  display: grid;
+  gap: 2px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+.field-map-section-links a:hover {
+  text-decoration: underline;
+  text-decoration-color: #a8a8a8;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+.field-map-section-link-kind {
+  color: var(--faint);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .field-map-concept-footer {
@@ -1432,6 +1477,8 @@ td {
   grid-template-columns: minmax(0, 1fr) 1.5rem;
   gap: 1rem;
   align-items: end;
+  margin-top: auto;
+  padding-top: 18px;
 }
 
 .field-map-concept-footer p {

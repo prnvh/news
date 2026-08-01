@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import ArticleMetadata from "../components/editorial/ArticleMetadata.astro";
+import DraftBanner from "../components/editorial/DraftBanner.astro";
 import { articleSeo } from "../lib/content";
 import { formatRelativeDate } from "../lib/format-date";
 import type { NormalizedArticle } from "../lib/types";
@@ -23,6 +24,7 @@ const typeLabels: Record<NormalizedArticle["type"], string> = {
   "field-map": "Field map",
 };
 const typeLabel = typeLabels[article.type];
+const isDraft = article.status === "draft";
 ---
 
 <BaseLayout
@@ -32,17 +34,29 @@ const typeLabel = typeLabels[article.type];
   canonical={seo.canonical}
   chrome="article"
 >
-  <article class="journal-article" data-pagefind-body data-pagefind-meta={`type:${article.type}`}>
-    <span
-      class="visually-hidden"
-      aria-hidden="true"
-      data-pagefind-meta={`topics:${article.topics.join(", ")}`}
-    />
-    <span
-      class="visually-hidden"
-      aria-hidden="true"
-      data-pagefind-meta={`tags:${article.tags.join(", ")}`}
-    />
+  <DraftBanner status={article.status} />
+  <article
+    class="journal-article"
+    data-pagefind-body={isDraft ? undefined : true}
+    data-pagefind-ignore={isDraft ? true : undefined}
+    data-pagefind-meta={isDraft ? undefined : `type:${article.type}`}
+  >
+    {
+      !isDraft && (
+        <>
+          <span
+            class="visually-hidden"
+            aria-hidden="true"
+            data-pagefind-meta={`topics:${article.topics.join(", ")}`}
+          />
+          <span
+            class="visually-hidden"
+            aria-hidden="true"
+            data-pagefind-meta={`tags:${article.tags.join(", ")}`}
+          />
+        </>
+      )
+    }
 
     <header class="journal-article-header">
       <p class="journal-article-kicker">{typeLabel}</p>

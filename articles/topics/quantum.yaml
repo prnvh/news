@@ -1,0 +1,21 @@
+name: Quantum
+slug: quantum
+description: Quantum technology across computing, communication, sensing and metrology, simulation, materials and devices, and quantum information.
+keyQuestions:
+  - Which branches of quantum technology are maturing fastest?
+  - Where does quantum computing differ from quantum communication and sensing?
+  - Which hardware and device constraints shape the whole field?
+  - Where can quantum simulation or sensing matter before fault-tolerant computing?
+  - What evidence separates a laboratory demonstration from a useful quantum technology?
+coreConcepts:
+  - term: Quantum computing
+    definition: The use of controlled quantum states and operations to perform computational tasks.
+  - term: Quantum communication
+    definition: The transfer and protection of information using quantum states, entanglement, and measurement.
+  - term: Quantum sensing
+    definition: The use of quantum effects to measure time, fields, motion, or position with high precision.
+  - term: Quantum simulation
+    definition: The use of controllable quantum systems to model other quantum systems that are difficult to study classically.
+furtherReading: []
+featuredSlugs:
+  - quantum

@@ -29,7 +29,7 @@ export const baseArticleSchema = z.object({
   description: z.string().optional(),
   date: z.coerce.date(),
   updated: z.coerce.date().optional(),
-  status: z.enum(["draft", "published"]).default("published"),
+  status: z.enum(["draft", "published"]).default("draft"),
   author: z.string().default("Frontier Manual"),
   slug: z.string().optional(),
   topics: z.array(z.string()).default([]),
@@ -72,30 +72,36 @@ const briefSchema = baseArticleSchema.extend({
     .optional(),
 });
 
-const researchNoteSchema = baseArticleSchema.extend({
-  type: z.literal("research-note").default("research-note"),
-  paper: z
-    .object({
-      title: z.string(),
-      authors: z.array(z.string()).default([]),
-      year: z.union([z.string(), z.number()]).optional(),
-      source: z.string().optional(),
-      url: z.string().url().optional(),
-      venue: z.string().optional(),
-    })
-    .optional(),
-  resultType: z
-    .enum([
-      "paper",
-      "benchmark",
-      "technical-report",
-      "blog",
-      "dataset",
-      "model-release",
-      "other",
-    ])
-    .default("paper"),
-});
+const researchNoteSchema = baseArticleSchema
+  .omit({ subtitle: true, summary: true })
+  .extend({
+    type: z.literal("research-note").default("research-note"),
+    // Paper notes are written as freeform markdown (Source / Authors / Goals / Notes).
+    // Keep these optional so the YAML stays thin.
+    subtitle: z.string().optional().default(""),
+    summary: z.array(z.string()).default([]),
+    paper: z
+      .object({
+        title: z.string(),
+        authors: z.array(z.string()).default([]),
+        year: z.union([z.string(), z.number()]).optional(),
+        source: z.string().optional(),
+        url: z.string().url().optional(),
+        venue: z.string().optional(),
+      })
+      .optional(),
+    resultType: z
+      .enum([
+        "paper",
+        "benchmark",
+        "technical-report",
+        "blog",
+        "dataset",
+        "model-release",
+        "other",
+      ])
+      .default("paper"),
+  });
 
 const essaySchema = baseArticleSchema.extend({
   type: z.literal("essay").default("essay"),
@@ -119,8 +125,18 @@ const fieldMapSchema = baseArticleSchema.extend({
         readingTime: z.string().optional(),
         notesCount: z.number().int().nonnegative().optional(),
         papersCount: z.number().int().nonnegative().optional(),
-        anchor: z.string(),
+        anchor: z.string().optional(),
         href: z.string().optional(),
+        /** Article slugs (concept notes or paper breakdowns) shown under this section. */
+        slugs: z
+          .array(z.union([z.string(), z.null()]))
+          .optional()
+          .transform((list) =>
+            list
+              ?.filter((slug): slug is string => typeof slug === "string")
+              .map((slug) => slug.trim())
+              .filter(Boolean),
+          ),
       }),
     )
     .min(1, "mapSections must have at least one section"),
@@ -133,7 +149,7 @@ const pageSchema = z.object({
   title: z.string().min(1, "title is required"),
   subtitle: z.string().optional(),
   description: z.string().optional(),
-  status: z.enum(["draft", "published"]).default("published"),
+  status: z.enum(["draft", "published"]).default("draft"),
   seo: z
     .object({
       title: z.string().optional(),

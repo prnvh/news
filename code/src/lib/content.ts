@@ -23,8 +23,18 @@ const COLLECTION_TO_TYPE: Record<ArticleCollection, ArticleType> = {
   fieldMaps: "field-map",
 };
 
-export function isVisibleInProduction(status: "draft" | "published"): boolean {
-  if (status === "published") return true;
+/** True only for articles meant for the public site. */
+export function isPublished(status: "draft" | "published"): boolean {
+  return status === "published";
+}
+
+/**
+ * Whether an entry should appear on the site.
+ * Published entries always appear. Drafts appear only in local `astro dev`
+ * so you can preview them; they are omitted from production builds.
+ */
+export function isSiteVisible(status: "draft" | "published"): boolean {
+  if (isPublished(status)) return true;
   return import.meta.env.DEV;
 }
 
@@ -46,8 +56,8 @@ export function normalizeArticle(entry: ArticleEntry): NormalizedArticle {
     collection,
     type: COLLECTION_TO_TYPE[collection],
     title: entry.data.title,
-    subtitle: entry.data.subtitle,
-    description: entry.data.description ?? entry.data.subtitle,
+    subtitle: entry.data.subtitle ?? "",
+    description: entry.data.description ?? entry.data.subtitle ?? entry.data.title,
     date: entry.data.date,
     updated: entry.data.updated,
     status: entry.data.status,
@@ -93,7 +103,7 @@ export async function getAllArticles(): Promise<NormalizedArticle[]> {
 
 export async function getPublishedArticles(): Promise<NormalizedArticle[]> {
   const articles = await getAllArticles();
-  return articles.filter((a) => isVisibleInProduction(a.status));
+  return articles.filter((a) => isPublished(a.status));
 }
 
 export async function getArticlesByType(
@@ -122,7 +132,7 @@ export async function getFieldMaps(): Promise<NormalizedArticle[]> {
 export async function getArticleBySlug(
   slug: string,
 ): Promise<NormalizedArticle | undefined> {
-  const articles = await getAllArticles();
+  const articles = await getPublishedArticles();
   return articles.find((a) => a.slug === slug);
 }
 
@@ -160,7 +170,7 @@ export function articleSeo(article: NormalizedArticle) {
 
 export async function getPages() {
   const pages = await getCollection("pages");
-  return pages.filter((p) => isVisibleInProduction(p.data.status));
+  return pages.filter((p) => isPublished(p.data.status));
 }
 
 export async function getPageBySlug(slug: string) {

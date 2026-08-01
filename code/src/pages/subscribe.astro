@@ -5,7 +5,7 @@ import NewsletterForm from "../components/newsletter/NewsletterForm.astro";
 import { getPageBySlug } from "../lib/content";
 
 const page = await getPageBySlug("subscribe");
-if (!page) throw new Error("Missing articles/pages/subscribe.mdx");
+if (!page) throw new Error("Missing articles/pages/subscribe.md");
 const { Content } = await render(page);
 ---
 <PageLayout page={page} Content={Content}>

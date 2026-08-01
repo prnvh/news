@@ -1,0 +1,17 @@
+---
+interface Props {
+  status: "draft" | "published";
+}
+
+const { status } = Astro.props;
+const show = status === "draft" && import.meta.env.DEV;
+---
+
+{
+  show && (
+    <p class="draft-banner" role="status">
+      Draft — visible in local preview only. Set <code>status: published</code>{" "}
+      to ship it.
+    </p>
+  )
+}

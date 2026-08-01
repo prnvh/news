@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import ArticleLayout from "../../layouts/ArticleLayout.astro";
-import { isVisibleInProduction, normalizeArticle } from "../../lib/content";
+import { isSiteVisible, normalizeArticle } from "../../lib/content";
 import { getRelatedArticles } from "../../lib/related";
 import { resolveSlug } from "../../lib/slugs";
 import { getTopicObjectsForArticle } from "../../lib/topics";
@@ -9,7 +9,7 @@ import { getTopicObjectsForArticle } from "../../lib/topics";
 export async function getStaticPaths() {
   const entries = await getCollection("researchNotes");
   return entries
-    .filter((e) => isVisibleInProduction(e.data.status))
+    .filter((e) => isSiteVisible(e.data.status))
     .map((entry) => ({
       params: { slug: resolveSlug(entry.id, entry.data.slug) },
       props: { entry },

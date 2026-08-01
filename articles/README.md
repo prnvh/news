@@ -2,6 +2,19 @@
 
 This folder is the writing desk. The app code lives next door in `../code`.
 
+## Draft vs published
+
+Every article and page has a frontmatter `status`:
+
+```yaml
+status: draft      # work in progress — not on the public site
+status: published  # live on the website
+```
+
+- Templates default to `status: draft`. New files without a status are treated as drafts.
+- Only `status: published` entries appear on the homepage, section indexes, topics, RSS, sitemap, and search.
+- In local `npm run dev`, you can still open a draft by its URL (for example `/concept-notes/your-slug`) to preview it. A draft banner appears at the top. Drafts are omitted from production builds.
+
 ## Publish
 
 1. Copy a template from `_templates/`.
@@ -10,8 +23,8 @@ This folder is the writing desk. The app code lives next door in `../code`.
    - Paper breakdowns go in `paper-breakdowns/`.
    - Field breakdowns go in `field-breakdowns/`.
    - Field maps go in `field-maps/`.
-3. Name it `YYYY-MM-DD-slug.mdx` or `YYYY-MM-DD-slug.md`.
-4. Fill the frontmatter and set `status: published`.
+3. Name it `YYYY-MM-DD-slug.md`.
+4. Write the piece with `status: draft`, then set `status: published` when it should go live.
 5. Put article images in `assets/images/` and reference them as `/images/file-name.png`.
 6. Use simple lowercase image names with hyphens, like `jepa-latent-portal.png`.
 
