@@ -4,7 +4,7 @@ date: 2026-08-01
 type: research-note
 slug: event-driven-tactile-skin
 topics: ["robotics", "hardware", "compute"]
-status: draft
+status: published
 ---
 
 **Source:** [An Event-Driven E-Skin System with Dynamic Binary Scanning and real time SNN Classification](https://arxiv.org/abs/2603.10537)  
@@ -15,7 +15,7 @@ status: draft
 
 ## Notes.
 
-reasoning behind SNNs:
+reasoning behind using SNNs:
 
 even with event driven scanning, systems still use ANNs for classification which causes a mismatch between the sparse event driven data and dense frames for ANN processing. also need too much compute / parameter counts for an embedded system.
 

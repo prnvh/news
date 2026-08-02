@@ -4,7 +4,7 @@ date: 2026-08-01
 type: research-note
 slug: spatial-and-network-principles-behind-neural-locomotion
 topics: ["neuroscience", "robotics"]
-status: draft
+status: published
 ---
 
 **Source:** [Komi et al. 2026](https://doi.org/10.1038/s41467-026-74228-0)  

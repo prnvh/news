@@ -4,7 +4,7 @@ date: 2026-08-01
 type: research-note
 slug: FPGN
 topics: ["robotics", "hardware", "compute"]
-status: draft
+status: published
 ---
 
 **Source:** [FPGN 2026](https://arxiv.org/abs/2607.08427)  
