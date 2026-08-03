@@ -8,7 +8,7 @@ interface Props {
   article: NormalizedArticle;
   recentPapers: NormalizedArticle[];
   relatedConceptNotes: NormalizedArticle[];
-  /** All site-visible concept notes + paper breakdowns, for mapSections[].slugs */
+  /** All site-visible concept notes + paper notes, for mapSections[].slugs */
   allNotes?: NormalizedArticle[];
   Content?: import("astro").MarkdownInstance<unknown>["Content"];
 }
@@ -342,7 +342,7 @@ const isDraft = article.status === "draft";
                   </li>
                 ))}
               </ol>
-              <a class="field-map-list-action" href="/paper-breakdowns">
+              <a class="field-map-list-action" href="/paper-notes">
                 View all papers <span aria-hidden="true">&rarr;</span>
               </a>
             </div>

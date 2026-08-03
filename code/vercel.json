@@ -1,4 +1,16 @@
 {
   "buildCommand": "npm run build",
-  "framework": "astro"
+  "framework": "astro",
+  "redirects": [
+    {
+      "source": "/paper-breakdowns",
+      "destination": "/paper-notes",
+      "permanent": true
+    },
+    {
+      "source": "/paper-breakdowns/:path*",
+      "destination": "/paper-notes/:path*",
+      "permanent": true
+    }
+  ]
 }

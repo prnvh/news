@@ -11,7 +11,7 @@ import type {
 
 const ROUTE_PREFIX: Record<ArticleCollection, string> = {
   briefs: "/concept-notes",
-  researchNotes: "/paper-breakdowns",
+  researchNotes: "/paper-notes",
   essays: "/field-breakdowns",
   fieldMaps: "/field-maps",
 };

@@ -127,7 +127,7 @@ const fieldMapSchema = baseArticleSchema.extend({
         papersCount: z.number().int().nonnegative().optional(),
         anchor: z.string().optional(),
         href: z.string().optional(),
-        /** Article slugs (concept notes or paper breakdowns) shown under this section. */
+        /** Article slugs (concept notes or paper notes) shown under this section. */
         slugs: z
           .array(z.unknown())
           .optional()
@@ -195,7 +195,7 @@ export const collections = {
   researchNotes: defineCollection({
     loader: glob({
       pattern: articlePattern,
-      base: `${articlesRoot}/paper-breakdowns`,
+      base: `${articlesRoot}/paper-notes`,
     }),
     schema: researchNoteSchema,
   }),

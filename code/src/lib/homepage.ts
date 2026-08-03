@@ -30,8 +30,8 @@ const JOURNAL_SECTION_CONFIG: Array<{
 }> = [
   { label: "Field Maps", href: "/field-maps", type: "field-map", metaPrefix: "Updated" },
   {
-    label: "Paper Breakdowns",
-    href: "/paper-breakdowns",
+    label: "Paper Notes",
+    href: "/paper-notes",
     type: "research-note",
     metaPrefix: "",
   },

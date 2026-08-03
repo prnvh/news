@@ -20,7 +20,7 @@ status: published  # live on the website
 1. Copy a template from `_templates/`.
 2. Save it in the matching source folder:
    - Concept notes go in `concept-notes/`.
-   - Paper breakdowns go in `paper-breakdowns/`.
+   - Paper notes go in `paper-notes/`.
    - Field breakdowns go in `field-breakdowns/`.
    - Field maps go in `field-maps/`.
 3. Name it `YYYY-MM-DD-slug.md`.
@@ -28,7 +28,7 @@ status: published  # live on the website
 5. Put article images in `assets/images/` and reference them as `/images/file-name.png`.
 6. Use simple lowercase image names with hyphens, like `jepa-latent-portal.png`.
 
-Homepage, indexes, topics, RSS, sitemap, and search update automatically. Public URLs use `/concept-notes`, `/paper-breakdowns`, `/field-breakdowns`, and `/field-maps`.
+Homepage, indexes, topics, RSS, sitemap, and search update automatically. Public URLs use `/concept-notes`, `/paper-notes`, `/field-breakdowns`, and `/field-maps`.
 
 ## Homepage Curation
 
@@ -37,14 +37,14 @@ Set `homepage: true` or `featured: true` in an entry's frontmatter to keep it in
 ## Journal Architecture
 
 - Field maps: big living atlas pieces, such as neuromorphic robotics, energy-based models, AI for science, or embodied intelligence.
-- Paper breakdowns: atomic learning units. Each one should answer: what problem is the paper trying to solve, what is the core idea, what method did they use, what result matters, what assumptions does it make, what does it connect to, what confused me, what could be built from it, and how does it change the field map.
+- Paper notes: atomic learning units. Each one should answer: what problem is the paper trying to solve, what is the core idea, what method did they use, what result matters, what assumptions does it make, what does it connect to, what confused me, what could be built from it, and how does it change the field map.
 - Concept notes: clear explanations of one concept, such as event-based vision, spiking neural networks, or neuromorphic chips.
 - Field breakdowns: narrower chapters inside a bigger map, such as robotic foundation models or event-based vision for robotics.
 
 ## Folders
 
 - `concept-notes/`: concept notes
-- `paper-breakdowns/`: paper breakdowns
+- `paper-notes/`: paper notes
 - `field-breakdowns/`: field breakdowns
 - `field-maps/`: living atlas pieces
 - `pages/`: editable page copy for About, Start Here, and Subscribe

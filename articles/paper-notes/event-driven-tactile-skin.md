@@ -15,7 +15,7 @@ status: published
 
 ## Notes.
 
-reasoning behind using SNNs:
+the reasoning behind using SNNs for:
 
 even with event driven scanning, systems still use ANNs for classification which causes a mismatch between the sparse event driven data and dense frames for ANN processing. also need too much compute / parameter counts for an embedded system.
 

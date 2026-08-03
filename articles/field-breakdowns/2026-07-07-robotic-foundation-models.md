@@ -19,4 +19,4 @@ Robotic foundation models are large pretrained systems adapted to produce robot 
 
 Inside embodied intelligence, this chapter focuses on model families, datasets, and fine-tuning recipes rather than low-level control theory. The important subproblems are action tokenization, multimodal alignment, safety constraints, and sim-to-real transfer. The important methods are vision-language-action models, behavior cloning at scale, and co-training with web data.
 
-What is still unclear is how much generality is real versus benchmark-specific, and how to evaluate long-horizon competence once demos look good. On the field map, this feeds the Learning section of Embodied Intelligence and connects to paper breakdowns like RT-2.
+What is still unclear is how much generality is real versus benchmark-specific, and how to evaluate long-horizon competence once demos look good. On the field map, this feeds the Learning section of Embodied Intelligence and connects to paper notes like RT-2.

@@ -15,7 +15,25 @@ status: published
 
 ## Notes.
 
+Different from FPGA because it is LUT native. not the first to invent the concept, main goal is to optimize it heavily for speed.
+
+205x latency reduction compared to FPGA based BNN and 30x higher efficiency than previous LUT native networks.
+
+most FPGA based Neural Networks run an algorithm on top of LUTs within the FPGA. this is inefficient. similar with LUT native methods which largely fine tune algorithmic optimizations. the key insight is transforming FPGA fabric itself into a learnable LUT native neural network for ultra low latency acceleration.
+
+hence, "Ultra-Fast Programmable Gate-based Neural accelerators."
+
 ### Training
+
+2 training methods
+
+![FPGN training methods](/images/fpgn-training-methods.png)
+
+![FPGN training pipeline](/images/fpgn-training-pipeline.png)
+
+Differentiable Equality Indicator.
+
+![Differentiable equality indicator](/images/fpgn-differentiable-equality.png)
 
 Gradient Attenuation:
 
@@ -32,7 +50,7 @@ reduced by initializing weights via bimodal distribution using Gaussian distribu
 
 Micro Topological Design.
 
-**LUT-Vectors:** process input streams in parallel. if multi token inputs, similar to an MoE situation. provides parallelism, differentiated expertness.
+**LUT-Vectors:** process input streams in parallel. if multi token inputs, similar to an MoE situation where each LUT is its own expert. provides parallelism and differentiated expertness.
 
 **LUT-Tree:** input is many binary features but output is supposed to be one binary decision. instead of running all those binary features through every LUT one at a time, it splits the features and then feeds different features to different LUTs then processes the output of those LUTs to a final LUT which gives the binary decision. done in 2 LUT layers here.
 
@@ -50,6 +68,10 @@ Macro Topological Design:
 **Feature Extraction Stage:** stack of blocks with LUT-Conv layers implemented as channel wise parallel LUT-Vectors & popcount units. performs k-to-1 mapping within each LUT.
 
 **Output Stage:** cascaded FC layers and a task specific unit. for classification, the task specific unit implements a popcount-based group sum operation to get final scores with high precision required for robust classification performance.
+
+Fig 1.
+
+![FPGN architecture](/images/fpgn-architecture.png)
 
 Full Streaming Hardware Architecture:
 

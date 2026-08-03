@@ -18,10 +18,10 @@ const relatedPaperCount = await getRelatedPaperCount(article);
 const concepts = formatConceptLabels(topicObjects);
 const relatedHref =
   article.type === "research-note"
-    ? "/paper-breakdowns"
+    ? "/paper-notes"
     : field
       ? field.url
-      : "/paper-breakdowns";
+      : "/paper-notes";
 ---
 
 <footer class="article-metadata" aria-label="Article metadata">

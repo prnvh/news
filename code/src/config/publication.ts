@@ -9,7 +9,7 @@ export const publication = {
   newsletterActionUrl: "/api/newsletter/subscribe",
   nav: [
     { label: "Field Maps", href: "/field-maps" },
-    { label: "Paper Breakdowns", href: "/paper-breakdowns" },
+    { label: "Paper Notes", href: "/paper-notes" },
     { label: "Concept Notes", href: "/concept-notes" },
     { label: "Field Breakdowns", href: "/field-breakdowns" },
     { label: "Topics", href: "/topics" },

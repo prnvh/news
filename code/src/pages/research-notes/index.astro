@@ -7,14 +7,14 @@ const articles = (await getResearchNotes()).sort(
   (a, b) => b.date.getTime() - a.date.getTime(),
 );
 ---
-<BaseLayout title="Research Notes" description="Notes on papers, benchmarks, and technical reports.">
+<BaseLayout title="Paper Notes" description="Atomic paper notes that update larger field maps.">
   <section class="archive-header">
-    <p class="eyebrow">Research Notes</p>
-    <h1 class="article-title">Research Notes</h1>
+    <p class="eyebrow">Paper notes</p>
+    <h1 class="article-title">Paper Notes</h1>
   </section>
   {
     articles.length === 0 ? (
-      <p>No published research notes yet.</p>
+      <p>No published paper notes yet.</p>
     ) : (
       <ArchiveList articles={articles} />
     )
