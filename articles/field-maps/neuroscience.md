@@ -18,7 +18,8 @@ mapSections:
   - number: "01"
     title: "Cognition"
     description: "How brains plan, decide, remember, and coordinate action in the world."
-    slugs: []
+    slugs:
+      - pre-performance-rituals-as-contextual-retrieval-cues
   - number: "02"
     title: "Brain Computer Interface"
     description: "Reading from and writing to neural circuits for communication, control, and measurement."

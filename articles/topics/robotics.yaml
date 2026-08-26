@@ -1,0 +1,10 @@
+name: Robotics
+slug: robotics
+description: Embodied intelligence, sensing, and in-hardware computing for autonomous machines.
+keyQuestions: []
+coreConcepts: []
+furtherReading: []
+featuredSlugs:
+  - FPGN
+  - event-driven-tactile-skin
+  - fpga-based-in-hardware-compute

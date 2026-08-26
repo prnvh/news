@@ -1,0 +1,9 @@
+name: Neuroscience
+slug: neuroscience
+description: Cognition, neural representation, brain-computer interfaces, and how brains encode and act in the world.
+keyQuestions: []
+coreConcepts: []
+furtherReading: []
+featuredSlugs:
+  - spatial-and-network-principles-behind-neural-locomotion
+  - pre-performance-rituals-as-contextual-retrieval-cues

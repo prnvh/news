@@ -27,6 +27,7 @@ mapSections:
     slugs:
       - FPGN
       - event-driven-tactile-skin
+      - fpga-based-in-hardware-compute
 
 sources: []
 status: published
