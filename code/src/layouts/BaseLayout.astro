@@ -2,7 +2,8 @@
 import "../styles/global.css";
 import { publication } from "../config/publication";
 import Analytics from "@vercel/analytics/astro";
-
+import EntryTabs from "../components/editorial/EntryTabs.astro";
+import type { ArticleType } from "../lib/types";
 interface Props {
   title: string;
   description?: string;
@@ -10,39 +11,41 @@ interface Props {
   canonical?: string;
   chrome?: "site" | "article" | "field-map";
   sectionTitle?: string;
+  entryType?: ArticleType;
 }
-
 const {
   title,
   description = publication.tagline,
   image,
   canonical,
   chrome = "site",
-  sectionTitle,
+  entryType,
 } = Astro.props;
 const pageTitle =
-  title === publication.name ? title : `${title} - ${publication.name}`;
-const ogImage = image
-  ? new URL(image, publication.url).href
-  : new URL(publication.defaultOgImage, publication.url).href;
+  title === publication.name ? title : `${title} — ${publication.name}`;
+const ogImage = new URL(image ?? publication.defaultOgImage, publication.url)
+  .href;
 const canonicalUrl =
   canonical ?? new URL(Astro.url.pathname, publication.url).href;
-const path = Astro.url.pathname;
-const primaryNav = [
-  { label: "Field Maps", href: "/field-maps" },
-  { label: "Paper Notes", href: "/paper-notes" },
-  { label: "Concept Notes", href: "/concept-notes" },
-  { label: "Field Breakdowns", href: "/field-breakdowns" },
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isEntryIndex = [
+  "/",
+  "/all",
+  "/field-maps",
+  "/paper-notes",
+  "/concept-notes",
+  "/field-breakdowns",
+].includes(path);
+const browse = [
+  { label: "home", href: "/" },
+  { label: "topics", href: "/topics" },
+  { label: "about", href: "/about" },
+  { label: "subscribe", href: "/subscribe" },
 ];
-const footerNav = [
-  ...primaryNav,
-  { label: "Topics", href: "/topics" },
-  { label: "Start Here", href: "/start-here" },
-  { label: "About", href: "/about" },
-  { label: "Subscribe", href: "/subscribe" },
-  { label: "RSS", href: "/rss.xml" },
-];
+const current = (href: string) =>
+  path === href || (href !== "/" && path.startsWith(`${href}/`));
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -54,7 +57,10 @@ const footerNav = [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta property="og:type" content="website" />
+    <meta
+      property="og:type"
+      content={chrome === "article" ? "article" : "website"}
+    />
     <meta property="og:site_name" content={publication.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -73,104 +79,60 @@ const footerNav = [
     />
     <Analytics />
   </head>
-  <body>
-    <div class:list={["site-frame", chrome === "field-map" && "site-frame--field-map"]}>
-      <header
-        class:list={[
-          "site-header",
-          chrome === "field-map" && "site-header--field-map",
-          chrome === "article" && "site-header--article",
-        ]}
-      >
-        {
-          chrome === "field-map" ? (
-            <nav class="field-map-topbar" aria-label="Field map navigation">
-              <a class="field-map-back-link" href="/">
-                <span aria-hidden="true">&larr;</span>
-                <span>{publication.name}</span>
-              </a>
-              <a class="field-map-current-link" href="/field-maps">
-                <span>{sectionTitle ?? title}</span>
-                <span aria-hidden="true">&#8964;</span>
-              </a>
-              <a class="field-map-search-link" href="/search" aria-label="Search">
-                <span>Search</span>
-                <span class="field-map-search-icon" aria-hidden="true"></span>
-              </a>
-            </nav>
-          ) : chrome === "article" ? (
-            <nav class="journal-topbar" aria-label="Journal navigation">
-              <a class="journal-back-link" href="/">
-                <span aria-hidden="true">&larr;</span>
-                <span>Journal</span>
-              </a>
-              <a class="journal-search-link" href="/search" aria-label="Search">
-                <span>Search</span>
-                <span class="journal-search-icon" aria-hidden="true"></span>
-              </a>
-            </nav>
-          ) : (
-            <>
-              <div class="masthead-bar">
-                <a class="menu-link" href="/all" aria-label="All entries">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </a>
-                <a class="site-wordmark" href="/" aria-label={`${publication.name} home`}>
-                  {publication.name}
-                </a>
-                <a class="search-link" href="/search" aria-label="Search">
-                  <span></span>
-                </a>
-              </div>
-              <nav class="site-nav" aria-label="Primary navigation">
-                {primaryNav.map((item) => (
-                  <a
-                    href={item.href}
-                    aria-current={path === item.href || path.startsWith(`${item.href}/`)
-                      ? "page"
-                      : undefined}
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </nav>
-            </>
-          )
-        }
-      </header>
-
-      <main
-        class:list={[
-          "site-main",
-          chrome === "field-map" && "site-main--field-map",
-          chrome === "article" && "site-main--article",
-        ]}
-      >
-        <slot />
-      </main>
-
-      {
-        chrome === "site" && (
-          <footer class="site-footer">
-            <p>{publication.name}</p>
-            <nav aria-label="Footer navigation">
-              {footerNav.map((item) => <a href={item.href}>{item.label}</a>)}
-            </nav>
-            <p>&copy; {new Date().getFullYear()}</p>
-          </footer>
-        )
-      }
-
-      {
-        chrome === "field-map" && (
-          <footer class="site-footer">
-            <p>{publication.name}</p>
-            <p>&copy; {new Date().getFullYear()}</p>
-          </footer>
-        )
-      }
-    </div>
+  <body class="sidebar-page">
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <header class="mobile-header">
+      {!isEntryIndex && <a href="/">Frontier Manual</a>}
+      <details class="mobile-menu">
+        <summary>menu</summary>
+        <nav aria-label="Mobile navigation">
+          {browse.map((item) => (
+            <a
+              href={item.href}
+              aria-current={current(item.href) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      </details>
+    </header>
+    <aside class="home-sidebar" aria-label="Site navigation">
+      <nav aria-labelledby="browse-label">
+        <p class="sidebar-label" id="browse-label">
+          browse
+        </p>
+        {browse.map((item) => (
+          <a
+            href={item.href}
+            aria-current={current(item.href) ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+    </aside>
+    <main
+      id="main"
+      class:list={[
+        "plain-page",
+        chrome === "article" && "article-page",
+        chrome === "field-map" && "field-map-page",
+      ]}
+    >
+      {!isEntryIndex && (
+        <a class="publication-link" href="/">
+          Frontier Manual
+        </a>
+      )}
+      {entryType && <EntryTabs activeType={entryType} />}
+      <slot />
+      <footer class="page-footer">
+        <a href="https://pranavh.vercel.app">Pranav Harikumar</a>
+        <a href="/rss.xml">RSS</a>
+      </footer>
+    </main>
   </body>
 </html>

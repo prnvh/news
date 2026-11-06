@@ -1,5 +1,6 @@
 ---
 title: "Event-Driven Tactile Skin"
+description: "Event-driven touch sensing and local processing for faster robotic responses."
 date: 2026-08-01
 type: research-note
 slug: event-driven-tactile-skin

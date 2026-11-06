@@ -1,7 +1,7 @@
 ---
 title: "Robotics"
 subtitle: "Mapping parts of Robotics related to embodied intelligence, autonomous robotics, etc."
-description: "A field map for a specialized robotics landscape: embodied intelligence, autonomy, independant thinking, embodied AI, materials and devices, and foundations."
+description: "Embodied intelligence, neuromorphic architectures, and the hardware that brings sensing and action closer together."
 date: 2026-07-15
 updated: 2026-07-15
 type: field-map
@@ -13,17 +13,17 @@ summary:
   - "Robotics for embodied intelligence couples sensing, control, compute placement, and autonomy."
   - "Neuromorphic approaches and in-hardware computing matter when latency and closed-loop reaction dominate."
   - "This map keeps those branches separate so progress in one is not confused with progress in all of robotics."
-orientation: "This field map organizes robotics around embodied intelligence: neuromorphic architectures that borrow from biological control, and in-hardware computing that puts algorithms closer to the body of the robot."
+orientation: "Biological control, event-driven sensing, and in-hardware computing."
 mapSections:
   - number: "01"
     title: "Neuromorphic Robotics"
-    description: "Robotics architecture that tends towards how the human brain/body works."
+    description: "Sensing and control inspired by biology."
     slugs:
       - event-based-vision
       - event-driven-tactile-skin
   - number: "02"
     title: "In-Hardware Computing"
-    description: "Running algorithms, architectures, neural networks and systems in hardware for lower latency, embodied control."
+    description: "Low-latency inference and control in hardware."
     slugs:
       - FPGN
       - event-driven-tactile-skin

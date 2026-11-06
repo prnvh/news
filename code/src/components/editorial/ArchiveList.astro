@@ -1,23 +1,24 @@
 ---
 import type { NormalizedArticle } from "../../lib/types";
-import { formatRelativeDate } from "../../lib/format-date";
-
 interface Props {
   articles: NormalizedArticle[];
 }
-
 const { articles } = Astro.props;
 ---
 
-<div class="archive-list">
+<div class="archive-list archive-list--rows">
   {articles.map((article) => (
-    <article class="archive-entry">
-      <a class="archive-entry-link" href={article.url}>
-        <span class="archive-entry-copy">
-          <span class="story-title">{article.title}</span>
-          <span class="entry-meta">{formatRelativeDate(article.date, "")}</span>
-        </span>
-        <span class="archive-entry-arrow" aria-hidden="true">&rarr;</span>
+    <article class="archive-entry" data-type={article.type}>
+      <a class="archive-row" href={article.url}>
+        <h2>{article.title}</h2>
+        <time class="entry-meta" datetime={article.date.toISOString()}>
+          {article.date.toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            timeZone: "UTC",
+          })}
+        </time>
       </a>
     </article>
   ))}

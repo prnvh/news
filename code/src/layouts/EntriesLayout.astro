@@ -1,0 +1,22 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import EntryBrowser from "../components/editorial/EntryBrowser.astro";
+import { publication } from "../config/publication";
+import type { ArticleType } from "../lib/types";
+interface Props {
+  activeType?: ArticleType | "all";
+  title?: string;
+}
+const { activeType = "field-map", title = publication.name } = Astro.props;
+---
+
+<BaseLayout title={title} description={publication.tagline}>
+  <header class="home-intro">
+    <h1>Frontier Manual</h1>
+    <p>
+      an (in)frequently updated public database of papers i’ve read, concept
+      notes, and field maps. mostly neuroscience, cognition, and embodied AI.
+    </p>
+  </header>
+  <EntryBrowser activeType={activeType} />
+</BaseLayout>

@@ -1,22 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import ArchiveList from "../../components/editorial/ArchiveList.astro";
-import { getEssays } from "../../lib/content";
-
-const articles = (await getEssays()).sort(
-  (a, b) => b.date.getTime() - a.date.getTime(),
-);
+import EntriesLayout from "../../layouts/EntriesLayout.astro";
 ---
-<BaseLayout title="Field Breakdowns" description="Narrow chapters inside larger field maps.">
-  <section class="archive-header">
-    <p class="eyebrow">Field breakdowns</p>
-    <h1 class="article-title">Field Breakdowns</h1>
-  </section>
-  {
-    articles.length === 0 ? (
-      <p>No published field breakdowns yet.</p>
-    ) : (
-      <ArchiveList articles={articles} />
-    )
-  }
-</BaseLayout>
+
+<EntriesLayout title="Field Breakdowns" activeType="essay" />

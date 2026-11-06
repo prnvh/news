@@ -3,20 +3,23 @@ import BaseLayout from "./BaseLayout.astro";
 import ArticleMetadata from "../components/editorial/ArticleMetadata.astro";
 import DraftBanner from "../components/editorial/DraftBanner.astro";
 import { articleSeo } from "../lib/content";
-import { formatRelativeDate } from "../lib/format-date";
 import type { NormalizedArticle } from "../lib/types";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
   article: NormalizedArticle;
-  relatedArticles?: NormalizedArticle[];
   topicObjects: CollectionEntry<"topics">[];
   Content: import("astro").MarkdownInstance<unknown>["Content"];
 }
 
 const { article, topicObjects, Content } = Astro.props;
 const seo = articleSeo(article);
-const publishedLabel = formatRelativeDate(article.date);
+const publishedLabel = article.date.toLocaleDateString("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
 const typeLabels: Record<NormalizedArticle["type"], string> = {
   brief: "Concept note",
   "research-note": "Paper note",
@@ -24,7 +27,9 @@ const typeLabels: Record<NormalizedArticle["type"], string> = {
   "field-map": "Field map",
 };
 const typeLabel = typeLabels[article.type];
-const isDraft = article.status === "draft";
+const description =
+  article.subtitle ||
+  (article.description !== article.title ? article.description : undefined);
 ---
 
 <BaseLayout
@@ -33,36 +38,16 @@ const isDraft = article.status === "draft";
   image={seo.image}
   canonical={seo.canonical}
   chrome="article"
+  entryType={article.type}
 >
   <DraftBanner status={article.status} />
-  <article
-    class="journal-article"
-    data-pagefind-body={isDraft ? undefined : true}
-    data-pagefind-ignore={isDraft ? true : undefined}
-    data-pagefind-meta={isDraft ? undefined : `type:${article.type}`}
-  >
-    {
-      !isDraft && (
-        <>
-          <span
-            class="visually-hidden"
-            aria-hidden="true"
-            data-pagefind-meta={`topics:${article.topics.join(", ")}`}
-          />
-          <span
-            class="visually-hidden"
-            aria-hidden="true"
-            data-pagefind-meta={`tags:${article.tags.join(", ")}`}
-          />
-        </>
-      )
-    }
-
+  <article class="journal-article">
     <header class="journal-article-header">
-      <p class="journal-article-kicker">{typeLabel}</p>
+      <p class="journal-article-date">
+        {typeLabel} · {publishedLabel}
+      </p>
       <h1 class="journal-article-title">{article.title}</h1>
-      <p class="journal-article-author">{article.author}</p>
-      <p class="journal-article-date">{publishedLabel}</p>
+      {description && <p class="journal-article-subtitle">{description}</p>}
     </header>
 
     <div class="journal-article-body article-body">

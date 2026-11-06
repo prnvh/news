@@ -2,7 +2,6 @@
 import { getCollection, render } from "astro:content";
 import ArticleLayout from "../../layouts/ArticleLayout.astro";
 import { isSiteVisible, normalizeArticle } from "../../lib/content";
-import { getRelatedArticles } from "../../lib/related";
 import { resolveSlug } from "../../lib/slugs";
 import { getTopicObjectsForArticle } from "../../lib/topics";
 
@@ -19,12 +18,11 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const article = normalizeArticle(entry);
-const relatedArticles = await getRelatedArticles(article);
 const topicObjects = await getTopicObjectsForArticle(article);
 ---
+
 <ArticleLayout
   article={article}
-  relatedArticles={relatedArticles}
   topicObjects={topicObjects}
   Content={Content}
 />

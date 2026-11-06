@@ -1,10 +1,11 @@
 ---
 title: About
-subtitle: Frontier Manual
-description: A publication on frontier AI, research culture, and the systems behind technical progress.
+description: Pranav Harikumar’s public database of papers, concept notes, and field maps.
 status: published
 ---
 
-Frontier Manual is an editorial publication focused on frontier AI, research culture, and the institutions that shape technical progress.
+i’m [Pranav Harikumar](https://pranavh.vercel.app). i study all kinds of brains, with a deeper focus on cognition and behavioral sciences.
 
-We publish concept notes, paper notes, field breakdowns, and field maps—each with a distinct role in how we read the field.
+Frontier Manual is a public database of papers i’ve read, concepts i’m learning, and maps of how they connect. the current focus is neuroscience, robotics, and embodied AI.
+
+[Field maps](/field-maps) organize the subjects. [Paper notes](/paper-notes) and [concept notes](/concept-notes) fill in the details. everything is collected in the [full index](/all).

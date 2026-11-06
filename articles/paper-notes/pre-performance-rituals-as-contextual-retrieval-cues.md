@@ -1,5 +1,6 @@
 ---
 title: "Pre-Performance Rituals as Contextual Retrieval Cues"
+description: "Exploring how repeated performance routines might become cues for retrieving learned task states."
 date: 2026-08-26
 type: research-note
 slug: pre-performance-rituals-as-contextual-retrieval-cues

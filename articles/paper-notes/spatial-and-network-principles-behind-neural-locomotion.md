@@ -1,5 +1,6 @@
 ---
 title: "Spatial and Network Principles Behind Neural Locomotion"
+description: "How spatial organization and neural connectivity shape the generation of movement."
 date: 2026-08-01
 type: research-note
 slug: spatial-and-network-principles-behind-neural-locomotion

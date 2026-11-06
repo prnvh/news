@@ -1,36 +1,5 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import { publication } from "../config/publication";
-import { getJournalSections } from "../lib/homepage";
-
-const sections = await getJournalSections();
+import EntriesLayout from "../layouts/EntriesLayout.astro";
 ---
-<BaseLayout title={publication.name} description={publication.tagline}>
-  <div class="home-page" aria-label="Journal sections">
-    {sections.map((section) => (
-      <section class="journal-section" aria-labelledby={`${section.href.slice(1)}-heading`}>
-        <div class="journal-section-head">
-          <h2 id={`${section.href.slice(1)}-heading`} class="section-label">
-            {section.label}
-          </h2>
-          <a class="section-view-all" href={section.href}>
-            View all <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
-        <ol class="journal-list">
-          {section.rows.map((row) => (
-            <li>
-              <a class="journal-list-link" href={row.href}>
-                <span class="journal-list-copy">
-                  <span class="journal-list-title">{row.title}</span>
-                  <span class="journal-list-meta">{row.meta}</span>
-                </span>
-                <span class="journal-list-arrow" aria-hidden="true">&rarr;</span>
-              </a>
-            </li>
-          ))}
-        </ol>
-      </section>
-    ))}
-  </div>
-</BaseLayout>
+
+<EntriesLayout />

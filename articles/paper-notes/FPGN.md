@@ -1,5 +1,6 @@
 ---
 title: "FPGN"
+description: "Learning directly in FPGA fabric for ultra-low-latency, LUT-native neural inference."
 date: 2026-08-01
 type: research-note
 slug: FPGN

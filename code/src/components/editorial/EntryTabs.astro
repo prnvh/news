@@ -1,0 +1,25 @@
+---
+import type { ArticleType } from "../../lib/types";
+interface Props {
+  activeType: ArticleType | "all";
+}
+const { activeType } = Astro.props;
+const views = [
+  { label: "Field maps", type: "field-map", href: "/field-maps" },
+  { label: "Paper notes", type: "research-note", href: "/paper-notes" },
+  { label: "Concept notes", type: "brief", href: "/concept-notes" },
+  { label: "Field breakdowns", type: "essay", href: "/field-breakdowns" },
+  { label: "Everything", type: "all", href: "/all" },
+];
+---
+
+<nav class="entry-tabs" aria-label="Browse entries">
+  {views.map((view) => (
+    <a
+      href={view.href}
+      aria-current={view.type === activeType ? "page" : undefined}
+    >
+      {view.label}
+    </a>
+  ))}
+</nav>

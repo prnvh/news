@@ -1,10 +1,14 @@
 ---
 title: Start Here
-subtitle: How to read Frontier Manual
-description: A short guide to our content types and how the publication is organized.
+description: How Frontier Manual is organized.
 status: published
 ---
 
-**Concept notes** explain one idea clearly. **Paper notes** unpack a result or paper. **Field breakdowns** are narrower chapters inside a larger map. **Field maps** are living atlases you can navigate by part.
+Frontier Manual has four kinds of entries:
 
-Browse by topic when you want a thematic thread across formats. Subscribe when you want new work in your inbox—we will expand coverage as the publication grows.
+- [Field maps](/field-maps) organize a subject and link to its papers and concepts.
+- [Paper notes](/paper-notes) record what i take from individual papers.
+- [Concept notes](/concept-notes) explain one idea at a time.
+- [Field breakdowns](/field-breakdowns) explore a particular part of a subject in more detail.
+
+The current maps cover [neuroscience](/field-maps/neuroscience) and [robotics](/field-maps/robotics). Use the tabs above the entries to switch between views, or [browse by topic](/topics).

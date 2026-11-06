@@ -17,16 +17,16 @@ const topicCount = (slug: string, name: string) =>
       );
     }),
   ).length;
-const sorted = [...topics].sort((a, b) =>
-  a.data.name.localeCompare(b.data.name),
-);
+const sorted = [...topics]
+  .sort((a, b) => a.data.name.localeCompare(b.data.name))
+  .filter((topic) => topicCount(topic.data.slug, topic.data.name) > 0);
 ---
+
 <BaseLayout title="Topics" description="Browse Frontier Manual by topic.">
   <section class="archive-header">
-    <p class="eyebrow">Topics</p>
     <h1 class="article-title">Topics</h1>
   </section>
-  <div class="archive-list">
+  <div class="archive-list topic-directory">
     {sorted.map((topic) => {
       const count = topicCount(topic.data.slug, topic.data.name);
       return (
@@ -34,9 +34,13 @@ const sorted = [...topics].sort((a, b) =>
           <a class="archive-entry-link" href={`/topics/${topic.data.slug}`}>
             <span class="archive-entry-copy">
               <span class="story-title">{topic.data.name}</span>
-              <span class="entry-meta">{count} {count === 1 ? "piece" : "pieces"}</span>
+              <span class="entry-meta">
+                {count} {count === 1 ? "piece" : "pieces"}
+              </span>
             </span>
-            <span class="archive-entry-arrow" aria-hidden="true">&rarr;</span>
+            <span class="archive-entry-arrow" aria-hidden="true">
+              &rarr;
+            </span>
           </a>
         </article>
       );

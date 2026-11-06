@@ -1,0 +1,25 @@
+---
+import EntryTabs from "./EntryTabs.astro";
+import ArchiveList from "./ArchiveList.astro";
+import { getPublishedArticles } from "../../lib/content";
+import type { ArticleType } from "../../lib/types";
+interface Props {
+  activeType?: ArticleType | "all";
+}
+const { activeType = "field-map" } = Astro.props;
+const entries = (await getPublishedArticles())
+  .filter((article) => activeType === "all" || article.type === activeType)
+  .sort((a, b) => b.date.getTime() - a.date.getTime());
+---
+
+<section aria-label="Entries">
+  <EntryTabs activeType={activeType} />
+  <p class="visually-hidden">
+    {entries.length} {entries.length === 1 ? "entry" : "entries"}
+  </p>
+  {entries.length > 0 ? (
+    <ArchiveList articles={entries} />
+  ) : (
+    <p>No entries yet.</p>
+  )}
+</section>

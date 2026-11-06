@@ -13,8 +13,14 @@ const date = article.date.toLocaleDateString("en-US", {
   month: "long",
   day: "numeric",
 });
-const typeLabel = article.type.replace("-", " ");
+const typeLabel = {
+  brief: "Concept note",
+  "research-note": "Paper note",
+  essay: "Field breakdown",
+  "field-map": "Field map",
+}[article.type];
 ---
+
 <article>
   <Tag class="card-title">
     <a href={article.url}>{article.title}</a>

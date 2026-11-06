@@ -1,22 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import ArchiveList from "../../components/editorial/ArchiveList.astro";
-import { getResearchNotes } from "../../lib/content";
-
-const articles = (await getResearchNotes()).sort(
-  (a, b) => b.date.getTime() - a.date.getTime(),
-);
+import EntriesLayout from "../../layouts/EntriesLayout.astro";
 ---
-<BaseLayout title="Paper Notes" description="Atomic paper notes that update larger field maps.">
-  <section class="archive-header">
-    <p class="eyebrow">Paper notes</p>
-    <h1 class="article-title">Paper Notes</h1>
-  </section>
-  {
-    articles.length === 0 ? (
-      <p>No published paper notes yet.</p>
-    ) : (
-      <ArchiveList articles={articles} />
-    )
-  }
-</BaseLayout>
+
+<EntriesLayout title="Paper Notes" activeType="research-note" />
